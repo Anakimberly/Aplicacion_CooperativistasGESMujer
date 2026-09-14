@@ -1,20 +1,18 @@
-﻿import { initializeApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-
+// Las credenciales se leen del archivo .env (local) o de EAS Secrets (Play Store)
 const firebaseConfig = {
-  apiKey: "AIzaSyB2YtpdQNNSyqzLSBEdAKFAa2KAqmHB9D0",
-  authDomain: "cooperativistasges.firebaseapp.com",
-  projectId: "cooperativistasges",
-  storageBucket: "cooperativistasges.firebasestorage.app",
-  messagingSenderId: "16742635042",
-  appId: "1:16742635042:web:15c1da6cf4d2b5eae49c7b"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-
 const app = initializeApp(firebaseConfig);
-
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
