@@ -11,6 +11,11 @@ export default function LoginScreen({ onNavigate }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
 
+  const handleLogin = () => {
+    const emailToUse = correo.trim() ? correo.trim() : 'cooperativista@gesmujer.org';
+    onNavigate('Home', emailToUse);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
@@ -36,6 +41,7 @@ export default function LoginScreen({ onNavigate }) {
             onChangeText={setCorreo}
             keyboardType='email-address'
             autoCapitalize='none'
+            placeholder='ejemplo@gesmujer.org'
             placeholderTextColor='rgba(255,255,255,0.5)'
           />
           <Text style={styles.label}>Contraseña:</Text>
@@ -52,11 +58,11 @@ export default function LoginScreen({ onNavigate }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => onNavigate('Home')}
+            onPress={handleLogin}
           >
             <Text style={styles.buttonText}>Iniciar Sesion</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Registrarme</Text>
           </TouchableOpacity>
         </View>

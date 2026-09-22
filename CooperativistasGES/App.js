@@ -5,26 +5,62 @@ import HomeScreen            from './screens/HomeScreen';
 import CooperativistasScreen from './screens/CooperativistasScreen';
 import GESMujerScreen        from './screens/GESMujerScreen';
 import CosteoScreen          from './screens/CosteoScreen';
+import PerfilScreen          from './screens/PerfilScreen';
 import BottomNav             from './components/BottomNav';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Login');
+  const [userEmail, setUserEmail] = useState('cooperativista@gesmujer.org');
+  const [profileData, setProfileData] = useState({
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    comunidad: '',
+    telefono: '',
+    cooperativa: '',
+  });
+
+  const handleNavigate = (screen, email = null) => {
+    if (email) {
+      setUserEmail(email);
+    }
+    setCurrentScreen(screen);
+  };
+
+  const handleSaveProfile = (newProfile) => {
+    setProfileData(newProfile);
+  };
 
   if (currentScreen === 'Login') {
-    return <LoginScreen onNavigate={setCurrentScreen} />;
+    return <LoginScreen onNavigate={handleNavigate} />;
   }
 
   const renderScreen = () => {
     switch (currentScreen) {
       case 'Cooperativistas':
-        return <CooperativistasScreen onNavigate={setCurrentScreen} />;
+        return (
+          <CooperativistasScreen
+            onNavigate={handleNavigate}
+            profileData={profileData}
+            onSaveProfile={handleSaveProfile}
+          />
+        );
       case 'GESMujer':
-        return <GESMujerScreen onNavigate={setCurrentScreen} />;
+        return <GESMujerScreen onNavigate={handleNavigate} />;
       case 'Costeo':
-        return <CosteoScreen onNavigate={setCurrentScreen} />;
+        return <CosteoScreen onNavigate={handleNavigate} />;
+      case 'Perfil':
+        return (
+          <PerfilScreen
+            onNavigate={handleNavigate}
+            userEmail={userEmail}
+            profileData={profileData}
+            onSaveProfile={handleSaveProfile}
+          />
+        );
       case 'Home':
       default:
-        return <HomeScreen onNavigate={setCurrentScreen} />;
+        return <HomeScreen onNavigate={handleNavigate} />;
     }
   };
 
@@ -33,7 +69,7 @@ export default function App() {
       <View style={styles.screenContainer}>
         {renderScreen()}
       </View>
-      <BottomNav currentScreen={currentScreen} onNavigate={setCurrentScreen} />
+      <BottomNav currentScreen={currentScreen} onNavigate={handleNavigate} />
     </View>
   );
 }

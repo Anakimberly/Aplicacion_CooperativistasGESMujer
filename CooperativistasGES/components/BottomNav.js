@@ -21,9 +21,14 @@ export default function BottomNav({ currentScreen, onNavigate }) {
 
       <TouchableOpacity
         style={styles.navItem}
+        onPress={() => onNavigate && onNavigate('Perfil')}
         activeOpacity={0.7}
       >
-        <Ionicons name='person-outline' size={28} color='white' />
+        <Ionicons
+          name={currentScreen === 'Perfil' ? 'person' : 'person-outline'}
+          size={28}
+          color='white'
+        />
       </TouchableOpacity>
 
       <TouchableOpacity

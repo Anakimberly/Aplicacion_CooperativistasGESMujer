@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
-  ScrollView, KeyboardAvoidingView, Platform, Alert, Modal,
+  ScrollView, KeyboardAvoidingView, Platform, Alert, Modal, Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 const PURPLE = '#5b1378';
+const LIGHT_PURPLE = '#f3e8fb';
 
 const COOPERATIVAS = [
   'Mujeres Bordando Sueños',
@@ -23,14 +25,15 @@ const COOPERATIVAS = [
   'Cooperativa Quiahije',
 ];
 
-export default function CooperativistasScreen({ onNavigate }) {
+export default function CooperativistasScreen({ onNavigate, profileData, onSaveProfile }) {
   const [form, setForm] = useState({
-    nombre: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    comunidad: '',
-    telefono: '',
-    cooperativa: '',
+    nombre: profileData?.nombre || '',
+    apellidoPaterno: profileData?.apellidoPaterno || '',
+    apellidoMaterno: profileData?.apellidoMaterno || '',
+    comunidad: profileData?.comunidad || '',
+    telefono: profileData?.telefono || '',
+    cooperativa: profileData?.cooperativa || '',
+    fotoUri: profileData?.fotoUri || null,
   });
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,13 +42,72 @@ export default function CooperativistasScreen({ onNavigate }) {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // 📷 Abrir galería para seleccionar foto
+  const handleSeleccionarFoto = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        Alert.alert('Permiso requerido', 'Necesitamos permiso para acceder a tus fotos.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        handleChange('fotoUri', result.assets[0].uri);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo seleccionar la imagen.');
+    }
+  };
+
+  const handleOpcionesFoto = () => {
+    if (form.fotoUri) {
+      Alert.alert(
+        'Foto de Perfil',
+        '¿Qué deseas hacer con tu foto?',
+        [
+          { text: 'Cambiar Foto', onPress: handleSeleccionarFoto },
+          {
+            text: 'Quitar Foto (Usar Avatar)',
+            style: 'destructive',
+            onPress: () => handleChange('fotoUri', null),
+          },
+          { text: 'Cancelar', style: 'cancel' },
+        ]
+      );
+    } else {
+      handleSeleccionarFoto();
+    }
+  };
+
   const handleGuardar = () => {
     const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono, cooperativa } = form;
     if (!nombre || !apellidoPaterno || !apellidoMaterno || !comunidad || !telefono || !cooperativa) {
       Alert.alert('Campos incompletos', 'Por favor llena todos los campos, incluyendo la cooperativa.');
       return;
     }
-    Alert.alert('Guardado', `Cooperativista ${nombre} ${apellidoPaterno} registrada correctamente.`);
+
+    if (onSaveProfile) {
+      onSaveProfile(form);
+    }
+
+    Alert.alert(
+      '¡Registro Guardado!',
+      `Cooperativista ${nombre} ${apellidoPaterno} registrada correctamente.`,
+      [
+        {
+          text: 'Ver Mi Perfil',
+          onPress: () => onNavigate('Perfil'),
+        },
+        { text: 'Aceptar' },
+      ]
+    );
   };
 
   const campos = [
@@ -77,6 +139,30 @@ export default function CooperativistasScreen({ onNavigate }) {
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Registro de cooperativista</Text>
+
+            {/* ── Selector de Foto de Perfil ── */}
+            <View style={styles.photoPickerContainer}>
+              <TouchableOpacity style={styles.avatarTouchable} onPress={handleOpcionesFoto} activeOpacity={0.8}>
+                {form.fotoUri ? (
+                  <Image source={{ uri: form.fotoUri }} style={styles.avatarImage} />
+                ) : (
+                  <View style={styles.avatarPlaceholder}>
+                    <MaterialCommunityIcons name='account-heart' size={46} color={PURPLE} />
+                  </View>
+                )}
+                <View style={styles.cameraBadge}>
+                  <Ionicons name='camera' size={14} color='white' />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleOpcionesFoto}>
+                <Text style={styles.photoPickerLabel}>
+                  {form.fotoUri ? 'Cambiar foto de perfil' : '+ Agregar foto de perfil'}
+                </Text>
+                <Text style={styles.photoPickerSublabel}>
+                  (Opcional - Si no agregas se usará el avatar por defecto)
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             {campos.map(({ label, field, keyboardType }) => (
               <View key={field} style={styles.fieldGroup}>
@@ -115,7 +201,7 @@ export default function CooperativistasScreen({ onNavigate }) {
             </View>
 
             <TouchableOpacity style={styles.btnGuardar} onPress={handleGuardar}>
-              <Text style={styles.btnGuardarText}>Guardar</Text>
+              <Text style={styles.btnGuardarText}>Guardar Registro</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -202,8 +288,60 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: PURPLE,
-    marginBottom: 20,
+    marginBottom: 16,
     textAlign: 'center',
+  },
+
+  // Photo Picker
+  photoPickerContainer: {
+    alignItems: 'center',
+    marginBottom: 22,
+  },
+  avatarTouchable: {
+    position: 'relative',
+    marginBottom: 8,
+  },
+  avatarPlaceholder: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: LIGHT_PURPLE,
+    borderWidth: 2,
+    borderColor: PURPLE,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    borderWidth: 2,
+    borderColor: PURPLE,
+  },
+  cameraBadge: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    backgroundColor: PURPLE,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  photoPickerLabel: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: PURPLE,
+    textAlign: 'center',
+  },
+  photoPickerSublabel: {
+    fontSize: 11,
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 2,
   },
 
   // Campos
