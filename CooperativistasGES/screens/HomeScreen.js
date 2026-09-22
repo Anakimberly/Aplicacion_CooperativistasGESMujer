@@ -109,28 +109,53 @@ export default function HomeScreen({ onNavigate }) {
     </SafeAreaView>
   );
 }
+
 //carrusel (tamaño de la pantalla )
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
-  carouselWrapper: { marginHorizontal: 16, marginTop: 20, marginBottom: 20 },
-  slide: { width: width - 32 },
-  slideBanner: {
-    backgroundColor: PURPLE,
-    borderRadius: 14,
-    padding: 20,
-    height: 125,
-    justifyContent: 'center',
+
+  // ────────────── ESTILOS DEL CARRUSEL ──────────────
+  // 💡 CONTENEDOR DEL CARRUSEL:
+  // overflow: 'hidden' recorta la pantalla para que NO se asome el pedacito de la siguiente tarjeta cuando está detenida.
+  carouselWrapper: {
+    marginHorizontal: 16,
+    marginTop: 20,
+    marginBottom: 16,
     overflow: 'hidden',
   },
+
+  // 💡 CADA DIAPOSITIVA:
+  // width: width - 32 asegura que ocupe el espacio del contenedor.
+  // paddingRight: 16 crea una separación transparente de 16px entre las tarjetas al deslizar para que NO se vean pegadas.
+  slide: {
+    width: width - 32,
+    paddingRight: 16, // 👈 Separación transparente entre tarjetas al deslizar
+  },
+
+  // 💡 DISEÑO Y ALTO DE LA TARJETA MORADA:
+  slideBanner: {
+    backgroundColor: PURPLE,
+    borderRadius: 16,
+    padding: 20,
+    height: 130, // 👈 Alto de la tarjeta
+    justifyContent: 'center',
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+  },
+  // ──────────────────────────────────────────────────
+
   //icono de la mujer en el carrusel y el tamaño de la letra
   slideIcon: { position: 'absolute', right: 16, top: 10 },
   slideTitle: { color: 'white', fontSize: 20, fontWeight: 'bold', lineHeight: 26 },
   slideSub:   { color: 'rgba(255,255,255,0.85)', fontSize: 12, marginTop: 6 },
-  dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 8 },
+  dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#ccc', marginHorizontal: 4 },
   dotActive: { backgroundColor: PURPLE },
   grid: {
-    
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -141,7 +166,7 @@ const styles = StyleSheet.create({
   },
   //card de las categorias
   card: {
-    width: (width - 46) ,
+    width: (width - 46) / 2,
     backgroundColor: 'white',
     borderRadius: 16,
     paddingVertical: 26,
