@@ -11,13 +11,14 @@ const { width } = Dimensions.get('window');
 const slides = [
   { id: '1', title: 'Las mujeres\nmovemos al mundo', sub: '¡Nuestra soberanía es económica!' },
   { id: '2', title: 'Cooperativa\nGES Mujer', sub: 'Juntas somos más fuertes' },
+  { id: '3', title: 'Empoderamiento\nEconómico', sub: '¡Cambiando vidas!' },
 ];
 
 const categories = [
-  { id: '1', name: 'Cooperativistas', icon: 'account-circle-outline' },
-  { id: '2', name: 'Costeo',          icon: 'cash-multiple'           },
-  { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline'    },
-  { id: '4', name: 'GESMujer',        icon: 'gender-female'           },
+  { id: '1', name: 'Cooperativistas', icon: 'account-circle-outline', screen: 'Cooperativistas' },
+  { id: '2', name: 'Costeo',          icon: 'cash-multiple',           screen: null },
+  { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline',    screen: null },
+  { id: '4', name: 'GESMujer',        icon: 'gender-female',           screen: 'GESMujer' },
 ];
 
 export default function HomeScreen({ onNavigate }) {
@@ -27,6 +28,10 @@ export default function HomeScreen({ onNavigate }) {
   const handleScroll = (e) => {
     const index = Math.round(e.nativeEvent.contentOffset.x / (width - 32));
     setActiveSlide(index);
+  };
+
+  const handleCardPress = (screen) => {
+    if (screen) onNavigate(screen);
   };
 
   return (
@@ -60,7 +65,6 @@ export default function HomeScreen({ onNavigate }) {
             </View>
           ))}
         </ScrollView>
-        
         <View style={styles.dots}>
           {slides.map((_, i) => (
             <View key={i} style={[styles.dot, i === activeSlide && styles.dotActive]} />
@@ -68,55 +72,45 @@ export default function HomeScreen({ onNavigate }) {
         </View>
       </View>
 
-      {/* ──  categorías ── */}
+      {/* ── categorías ── */}
       <View style={styles.grid}>
         {categories.map((cat) => (
-          <TouchableOpacity key={cat.id} style={styles.card}>
+          <TouchableOpacity
+            key={cat.id}
+            style={styles.card}
+            onPress={() => handleCardPress(cat.screen)}
+            activeOpacity={cat.screen ? 0.7 : 1}
+          >
             <MaterialCommunityIcons name={cat.icon} size={52} color='#444' />
             <Text style={styles.cardLabel}>{cat.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
-
-      {/* ── Boton Nav ── */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name='home' size={28} color='white' />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name='person-outline' size={28} color='white' />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name='settings-outline' size={28} color='white' />
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
-
+//carrusel (tamaño de la pantalla )
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
-
-  // Carousel
-  carouselWrapper: { marginHorizontal: 16, marginTop: 16, marginBottom: 4 },
+  carouselWrapper: { marginHorizontal: 16, marginTop: 20, marginBottom: 20 },
   slide: { width: width - 32 },
   slideBanner: {
     backgroundColor: PURPLE,
     borderRadius: 14,
     padding: 20,
-    height: 130,
+    height: 125,
     justifyContent: 'center',
     overflow: 'hidden',
   },
+  //icono de la mujer en el carrusel y el tamaño de la letra
   slideIcon: { position: 'absolute', right: 16, top: 10 },
   slideTitle: { color: 'white', fontSize: 20, fontWeight: 'bold', lineHeight: 26 },
   slideSub:   { color: 'rgba(255,255,255,0.85)', fontSize: 12, marginTop: 6 },
   dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 8 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#ccc', marginHorizontal: 4 },
   dotActive: { backgroundColor: PURPLE },
-
-  // Grid
   grid: {
+    
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -125,6 +119,7 @@ const styles = StyleSheet.create({
     gap: 14,
     alignContent: 'flex-start',
   },
+  //card de las categorias
   card: {
     width: (width - 46) / 2,
     backgroundColor: 'white',
@@ -138,6 +133,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
   },
+  //label de las categorias
   cardLabel: {
     marginTop: 8,
     fontSize: 14,
@@ -145,8 +141,7 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-
-  // Bottom nav
+  //boton del navbar inferior
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: PURPLE,

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
-  KeyboardAvoidingView, Platform,
+  KeyboardAvoidingView, Platform, Image,
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
 
@@ -21,7 +20,11 @@ export default function LoginScreen({ onNavigate }) {
       >
         {/* Logo */}
         <View style={styles.logoContainer}>
-          <MaterialCommunityIcons name='fire' size={110} color='white' />
+          <Image
+            source={require('../assets/LOGOGES.png')}
+            style={styles.logo}
+            resizeMode='contain'
+          />
         </View>
 
         {/* Campos */}
@@ -66,6 +69,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: PURPLE },
   inner: { flex: 1, justifyContent: 'center', paddingHorizontal: 40 },
   logoContainer: { alignItems: 'center', marginBottom: 40 },
+  logo: { width: 200, height: 200 },
   formContainer: { marginBottom: 30 },
   label: { color: 'white', fontSize: 16, marginTop: 20, marginBottom: 4 },
   input: {
