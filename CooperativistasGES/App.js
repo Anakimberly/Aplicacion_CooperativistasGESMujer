@@ -4,6 +4,7 @@ import LoginScreen           from './screens/LoginScreen';
 import HomeScreen            from './screens/HomeScreen';
 import CooperativistasScreen from './screens/CooperativistasScreen';
 import GESMujerScreen        from './screens/GESMujerScreen';
+import CosteoScreen          from './screens/CosteoScreen';
 import BottomNav             from './components/BottomNav';
 
 export default function App() {
@@ -19,6 +20,8 @@ export default function App() {
         return <CooperativistasScreen onNavigate={setCurrentScreen} />;
       case 'GESMujer':
         return <GESMujerScreen onNavigate={setCurrentScreen} />;
+      case 'Costeo':
+        return <CosteoScreen onNavigate={setCurrentScreen} />;
       case 'Home':
       default:
         return <HomeScreen onNavigate={setCurrentScreen} />;

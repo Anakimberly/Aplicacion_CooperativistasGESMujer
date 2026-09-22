@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar, Dimensions,
@@ -16,7 +16,7 @@ const slides = [
 
 const categories = [
   { id: '1', name: 'Cooperativistas', icon: 'account-circle-outline', screen: 'Cooperativistas' },
-  { id: '2', name: 'Costeo',          icon: 'cash-multiple',           screen: null },
+  { id: '2', name: 'Costeo',          icon: 'cash-multiple',           screen: 'Costeo' },
   { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline',    screen: null },
   { id: '4', name: 'GESMujer',        icon: 'gender-female',           screen: 'GESMujer' },
 ];
@@ -25,9 +25,29 @@ export default function HomeScreen({ onNavigate }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef(null);
 
+  // movimiento de carrusel automatico cada 3.5 segundos
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % slides.length;
+        if (scrollRef.current) {
+          scrollRef.current.scrollTo({
+            x: nextIndex * (width - 32),
+            animated: true,
+          });
+        }
+        return nextIndex;
+      });
+    }, 3500);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const handleScroll = (e) => {
     const index = Math.round(e.nativeEvent.contentOffset.x / (width - 32));
-    setActiveSlide(index);
+    if (index >= 0 && index < slides.length) {
+      setActiveSlide(index);
+    }
   };
 
   const handleCardPress = (screen) => {

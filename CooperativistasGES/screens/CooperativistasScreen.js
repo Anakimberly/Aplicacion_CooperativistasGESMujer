@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
-  ScrollView, KeyboardAvoidingView, Platform, Alert,
+  ScrollView, KeyboardAvoidingView, Platform, Alert, Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
+
+const COOPERATIVAS = [
+  'Mujeres Bordando Sueños',
+  'Yukumao',
+  'Ña’a Inuu Ini',
+  'Las cataleyas',
+  'Mujeres Afro del Ciruelo',
+  'Raices Tejidas',
+  'Aroma Ñuu Savi',
+  'Naxo Tojndi',
+  'Comunali Economia Social para las Mujeres Oaxaqueñas',
+  'Casa de la Mujer Chatina',
+  'SAE',
+  'Cooperativa Quiahije',
+];
 
 export default function CooperativistasScreen({ onNavigate }) {
   const [form, setForm] = useState({
@@ -15,16 +30,19 @@ export default function CooperativistasScreen({ onNavigate }) {
     apellidoMaterno: '',
     comunidad: '',
     telefono: '',
+    cooperativa: '',
   });
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleGuardar = () => {
-    const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono } = form;
-    if (!nombre || !apellidoPaterno || !apellidoMaterno || !comunidad || !telefono) {
-      Alert.alert('Campos incompletos', 'Por favor llena todos los campos.');
+    const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono, cooperativa } = form;
+    if (!nombre || !apellidoPaterno || !apellidoMaterno || !comunidad || !telefono || !cooperativa) {
+      Alert.alert('Campos incompletos', 'Por favor llena todos los campos, incluyendo la cooperativa.');
       return;
     }
     Alert.alert('Guardado', `Cooperativista ${nombre} ${apellidoPaterno} registrada correctamente.`);
@@ -75,12 +93,78 @@ export default function CooperativistasScreen({ onNavigate }) {
               </View>
             ))}
 
+            {/* ── Campo Cooperativa (Dropdown Modal) ── */}
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>Cooperativa a la que pertenece</Text>
+              <TouchableOpacity
+                style={styles.dropdownTrigger}
+                onPress={() => setModalVisible(true)}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    styles.dropdownTriggerText,
+                    !form.cooperativa && styles.placeholderText,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {form.cooperativa || 'Selecciona tu cooperativa'}
+                </Text>
+                <Ionicons name='chevron-down' size={20} color='#777' />
+              </TouchableOpacity>
+            </View>
+
             <TouchableOpacity style={styles.btnGuardar} onPress={handleGuardar}>
               <Text style={styles.btnGuardarText}>Guardar</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* ── Modal de Selección de Cooperativa ── */}
+      <Modal
+        visible={modalVisible}
+        animationType='fade'
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer} onStartShouldSetResponder={() => true}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Selecciona tu Cooperativa</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ padding: 4 }}>
+                <Ionicons name='close' size={24} color='#333' />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalList} showsVerticalScrollIndicator={true}>
+              {COOPERATIVAS.map((coop) => {
+                const isSelected = form.cooperativa === coop;
+                return (
+                  <TouchableOpacity
+                    key={coop}
+                    style={[styles.optionItem, isSelected && styles.optionItemSelected]}
+                    onPress={() => {
+                      handleChange('cooperativa', coop);
+                      setModalVisible(false);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
+                      {coop}
+                    </Text>
+                    {isSelected && <Ionicons name='checkmark-circle' size={22} color={PURPLE} />}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -134,6 +218,89 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#333',
     backgroundColor: '#FAFAFA',
+  },
+
+  // Dropdown trigger
+  dropdownTrigger: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    backgroundColor: '#FAFAFA',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  dropdownTriggerText: {
+    fontSize: 15,
+    color: '#333',
+    flex: 1,
+    marginRight: 8,
+  },
+  placeholderText: {
+    color: '#bbb',
+  },
+
+  // Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContainer: {
+    width: '100%',
+    maxHeight: '75%',
+    backgroundColor: 'white',
+    borderRadius: 18,
+    padding: 20,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: PURPLE,
+  },
+  modalList: {
+    marginTop: 4,
+  },
+  optionItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  optionItemSelected: {
+    backgroundColor: '#f3e8fb',
+  },
+  optionText: {
+    fontSize: 14.5,
+    color: '#333',
+    flex: 1,
+    paddingRight: 8,
+  },
+  optionTextSelected: {
+    fontWeight: '700',
+    color: PURPLE,
   },
 
   // Botón guardar
