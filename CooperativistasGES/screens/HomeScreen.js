@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   //card de las categorias
   card: {
-    width: (width - 46) / 2,
+    width: (width - 46) ,
     backgroundColor: 'white',
     borderRadius: 16,
     paddingVertical: 26,

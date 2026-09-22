@@ -50,7 +50,7 @@ const tarjetas = [
     titulo: 'Red de Apoyo y Contacto',
     preview: 'Canales directos y líneas de ayuda en Oaxaca.',
     detalle:
-      '🌐 www.gesmujer.org\n📧 contacto@gesmujer.org\n📱 Facebook: GES Mujer Oaxaca\n\nEmergencias Oaxaca:\n🆘 CAVI: 951 516 06 39\n🆘 Línea Mujer: 800 108 4053',
+      'www.gesmujer.org\n contacto@gesmujer.org\n Facebook: GES Mujer Oaxaca\n\nEmergencias Oaxaca:\n CAVI: 951 516 06 39\n Línea Mujer: 800 108 4053',
   },
 ];
 
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
 
   // Subtitulo
   subtitleBox: {
-    backgroundColor: LIGHT_PURPLE,
+    backgroundColor: "#e0c8f0",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
@@ -229,11 +229,11 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: PURPLE,
+    color: "#000000",
   },
   subtitleSub: {
     fontSize: 16,
-    color: '#7a4a9a',
+    color: '#000000',
     marginTop: 2,
   },
 
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#AF7AC5",
   },
   iconCircle: {
     width: 58,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
 
   // Cara Trasera
   backCard: {
-    backgroundColor: "#9B59B6",
+    backgroundColor: "#f3e8fb",
     justifyContent: 'space-between',
   },
   backHeader: {
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.25)',
+    borderBottomColor: 'rgba(48, 13, 72, 0.84)',// color de la linea de separacion del titulo y el detalle
     paddingBottom: 6,
   },
   backTitle: {
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   backHintText: {
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: 'rgba(19, 19, 19, 0.7)',
     textAlign: 'center',
     marginTop: 2,
   },
