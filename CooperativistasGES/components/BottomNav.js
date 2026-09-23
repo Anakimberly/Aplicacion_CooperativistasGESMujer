@@ -33,9 +33,14 @@ export default function BottomNav({ currentScreen, onNavigate }) {
 
       <TouchableOpacity
         style={styles.navItem}
+        onPress={() => onNavigate && onNavigate('Informacion')}
         activeOpacity={0.7}
       >
-        <Ionicons name='settings-outline' size={28} color='white' />
+        <Ionicons
+          name={currentScreen === 'Informacion' ? 'information-circle' : 'information-circle-outline'}
+          size={28}
+          color='white'
+        />
       </TouchableOpacity>
     </View>
   );

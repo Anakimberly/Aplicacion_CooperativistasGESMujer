@@ -6,6 +6,7 @@ import CooperativistasScreen from './screens/CooperativistasScreen';
 import GESMujerScreen        from './screens/GESMujerScreen';
 import CosteoScreen          from './screens/CosteoScreen';
 import PerfilScreen          from './screens/PerfilScreen';
+import InformacionScreen     from './screens/InformacionScreen';
 import BottomNav             from './components/BottomNav';
 
 export default function App() {
@@ -56,6 +57,12 @@ export default function App() {
             userEmail={userEmail}
             profileData={profileData}
             onSaveProfile={handleSaveProfile}
+          />
+        );
+      case 'Informacion':
+        return (
+          <InformacionScreen
+            onNavigate={handleNavigate}
           />
         );
       case 'Home':
