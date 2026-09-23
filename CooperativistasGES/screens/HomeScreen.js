@@ -114,30 +114,19 @@ export default function HomeScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
 
-  // ────────────── ESTILOS DEL CARRUSEL ──────────────
-  // 💡 CONTENEDOR DEL CARRUSEL:
-  // overflow: 'hidden' recorta la pantalla para que NO se asome el pedacito de la siguiente tarjeta cuando está detenida.
-  carouselWrapper: {
-    marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 16,
-    overflow: 'hidden',
-  },
+  // ESTILOS DEL CARRUSEL 
+  //  MARGEN LATERAL DEL CARRUSEL (Espacio a la izquierda y derecha de la pantalla):
+  carouselWrapper: { marginHorizontal: 16, marginTop: 20, marginBottom: 16 },
 
-  // 💡 CADA DIAPOSITIVA:
-  // width: width - 32 asegura que ocupe el espacio del contenedor.
-  // paddingRight: 16 crea una separación transparente de 16px entre las tarjetas al deslizar para que NO se vean pegadas.
-  slide: {
-    width: width - 32,
-    paddingRight: 16, // 👈 Separación transparente entre tarjetas al deslizar
-  },
+  // ANCHO DE CADA TARJETA DEL CARRUSEL 
+  slide: { width: width - 33 }, 
 
-  // 💡 DISEÑO Y ALTO DE LA TARJETA MORADA:
+  //  DISEÑO Y ALTO DE LA TARJETA DEL CARRUSEL
   slideBanner: {
     backgroundColor: PURPLE,
     borderRadius: 16,
     padding: 20,
-    height: 130, // 👈 Alto de la tarjeta
+    height: 130, 
     justifyContent: 'center',
     overflow: 'hidden',
     elevation: 3,
@@ -146,7 +135,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 5,
   },
-  // ──────────────────────────────────────────────────
+  
 
   //icono de la mujer en el carrusel y el tamaño de la letra
   slideIcon: { position: 'absolute', right: 16, top: 10 },
@@ -186,7 +175,7 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
-  //boton del navbar inferior
+  //boton del navbar  
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: PURPLE,
