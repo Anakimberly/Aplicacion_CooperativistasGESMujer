@@ -114,14 +114,22 @@ export default function HomeScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
 
-  // ESTILOS DEL CARRUSEL 
-  //  MARGEN LATERAL DEL CARRUSEL (Espacio a la izquierda y derecha de la pantalla):
-  carouselWrapper: { marginHorizontal: 16, marginTop: 20, marginBottom: 16 },
+  // ────────────── ESTILOS DEL CARRUSEL ──────────────
+  //CONTENEDOR DEL CARRUSEL:
+  carouselWrapper: {
+    marginHorizontal: 16,
+    marginTop: 20,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
 
-  // ANCHO DE CADA TARJETA DEL CARRUSEL 
-  slide: { width: width - 33 }, 
+  //cada tarjetita del carrusel:.
+  slide: {
+    width: width - 32,
+    paddingRight: 16, // separa las tarjetas del carrusel
+  },
 
-  //  DISEÑO Y ALTO DE LA TARJETA DEL CARRUSEL
+  
   slideBanner: {
     backgroundColor: PURPLE,
     borderRadius: 16,

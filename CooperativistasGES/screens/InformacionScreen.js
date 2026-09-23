@@ -52,7 +52,7 @@ export default function InformacionScreen({ onNavigate }) {
               style={styles.versionIcon}
               resizeMode='contain'
             />
-            <Text style={styles.versionText}>Versión 1.0.0</Text>
+            <Text style={styles.versionText}>Versión 1.0</Text>
           </View>
         </View>
 
@@ -64,7 +64,9 @@ export default function InformacionScreen({ onNavigate }) {
           </View>
 
           <Text style={styles.cardDescription}>
-            El <Text style={styles.boldText}>Grupo de Educación Popular con Mujeres A.C. (GESMujer)</Text> es una organización pionera en Oaxaca, dedicada desde 1977 a impulsar la equidad de género, la salud, la prevención de la violencia y el fortalecimiento de la autonomía económica de las mujeres.
+            El <Text style={styles.boldText}>Grupo de Educación Popular con Mujeres A.C. (GESMujer)</Text> es una organización pionera
+             en Oaxaca, dedicada desde 1977 a impulsar la equidad de género, la salud, la prevención de la violencia y el 
+             fortalecimiento de la autonomía económica de las mujeres.
           </Text>
 
           <View style={styles.bulletItem}>
@@ -89,7 +91,7 @@ export default function InformacionScreen({ onNavigate }) {
             <MaterialCommunityIcons name='laptop' size={28} color={PURPLE} />
             <View style={{ flex: 1 }}>
               <Text style={styles.devRoleTitle}>Diseño y Desarrollo de Software</Text>
-              <Text style={styles.devName}>Creado por la Ingeniera Ana Kimberly Hernández Pérez</Text>
+              <Text style={styles.devName}>Creado por Ana Kimberly Hernández Pérez</Text>
             </View>
           </View>
 
@@ -233,12 +235,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
     color: PURPLE,
   },
   cardDescription: {
-    fontSize: 13.5,
+    fontSize: 14,
     color: '#555',
     lineHeight: 20,
     marginBottom: 10,
@@ -274,12 +276,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   devRoleTitle: {
-    fontSize: 13.5,
+    fontSize: 14,
     fontWeight: '700',
     color: PURPLE,
   },
   devName: {
-    fontSize: 12,
+    fontSize: 13.5,
     color: '#666',
     marginTop: 1,
   },
