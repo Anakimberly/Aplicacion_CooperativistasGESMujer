@@ -6,6 +6,9 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
+import { db } from '../firebaseConfig';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
 const PURPLE = '#5b1378';
 const LIGHT_PURPLE = '#f3e8fb';
 const GREEN = '#27ae60';
@@ -132,6 +135,16 @@ export default function CosteoScreen({ onNavigate }) {
     };
 
     setProductosGuardados((prev) => [nuevoProd, ...prev]);
+
+    // ☁️ Guardar en Firebase Cloud Firestore
+    try {
+      addDoc(collection(db, 'productosCosteados'), {
+        ...nuevoProd,
+        fechaCreacion: serverTimestamp(),
+      });
+    } catch (e) {
+      console.log('Aviso Firestore:', e);
+    }
 
     Alert.alert(
       '¡Producto Guardado!',

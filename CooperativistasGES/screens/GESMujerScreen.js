@@ -18,39 +18,39 @@ const CARD_HEIGHT = 280;
 const tarjetas = [
   {
     id: '1',
-    iconoTipo: 'material',
-    icono: 'history',
-    titulo: 'Nuestra Historia',
-    preview: 'Fundada en 1977, más de 40 años de trayectoria.',
+    iconoTipo: '',
+    icono: '',
+    titulo: '',
+    preview: '',
     detalle:
-      'Nació en 1977 en Oaxaca como organización civil comprometida con los derechos de las mujeres, impulsando salud, educación popular, cooperativismo y autonomía económica.',
+      '',
   },
   {
     id: '2',
-    iconoTipo: 'material',
-    icono: 'shield-alert-outline',
-    titulo: 'Feminicidios',
-    preview: 'Visibilizando la violencia feminicida en Oaxaca.',
-    detalle:
-      'Documenta y visibiliza la violencia feminicida, acompañando a familias, exigiendo justicia y generando datos para incidir en políticas públicas y prevención.',
+    iconoTipo: '',
+    icono: '',
+    titulo: '',
+    preview: '',
+    detalle: '',
+      
   },
   {
     id: '3',
-    iconoTipo: 'material',
-    icono: 'hand-heart-outline',
-    titulo: 'Empoderamiento y Derechos',
-    preview: 'Herramientas para vivir libres de violencia.',
+    iconoTipo: '',
+    icono: '',
+    titulo: '',
+    preview: '',
     detalle:
-      'Talleres, materiales educativos y guías prácticas para conocer y ejercer derechos, liderazgo comunitario y apoyo al cooperativismo de las mujeres.',
+      '',
   },
   {
     id: '4',
-    iconoTipo: 'ionicons',
-    icono: 'call-outline',
-    titulo: 'Red de Apoyo y Contacto',
-    preview: 'Canales directos y líneas de ayuda en Oaxaca.',
+    iconoTipo: '',
+    icono: '',
+    titulo: '',
+    preview: '',
     detalle:
-      'www.gesmujer.org\n contacto@gesmujer.org\n Facebook: GES Mujer Oaxaca\n\nEmergencias Oaxaca:\n CAVI: 951 516 06 39\n Línea Mujer: 800 108 4053',
+      '',
   },
 ];
 
@@ -112,9 +112,9 @@ function FlipCard({ item }) {
 
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
+      activeOpacity={0.9}            
       onPress={flipCard}
-      style={styles.cardContainer}
+      style={styles.cardContainer}          
     >
       {/* ── Cara frontal de las tarjetas ── */}
       <Animated.View style={[styles.card, styles.frontCard, frontAnimatedStyle]}>
@@ -130,7 +130,7 @@ function FlipCard({ item }) {
         <Text style={styles.frontPreview}>{item.preview}</Text>
 
         <View style={styles.flipHintContainer}>
-          <Ionicons name="sync-outline" size={13} color={PURPLE} />
+          <Ionicons name="sync-outline" size={13} color={PURPLE} /> 
           <Text style={styles.flipHintText}>Toca para ver más</Text>
         </View>
       </Animated.View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import LoginScreen           from './screens/LoginScreen';
 import HomeScreen            from './screens/HomeScreen';
@@ -7,11 +7,15 @@ import GESMujerScreen        from './screens/GESMujerScreen';
 import CosteoScreen          from './screens/CosteoScreen';
 import PerfilScreen          from './screens/PerfilScreen';
 import InformacionScreen     from './screens/InformacionScreen';
+import GuiaEconomiaScreen    from './screens/GuiaEconomiaScreen';
 import BottomNav             from './components/BottomNav';
+
+import { db } from './firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Login');
-  const [userEmail, setUserEmail] = useState('cooperativista@gesmujer.org');
+  const [userEmail, setUserEmail] = useState('');
   const [profileData, setProfileData] = useState({
     nombre: '',
     apellidoPaterno: '',
@@ -21,6 +25,23 @@ export default function App() {
     cooperativa: '',
   });
 
+  // Cargar perfil desde Firestore cuando cambia el correo del usuario
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userEmail) return;
+      try {
+        const docRef = doc(db, 'cooperativistas', userEmail.toLowerCase());
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfileData(docSnap.data());
+        }
+      } catch (e) {
+        console.log('Aviso al cargar perfil en App:', e);
+      }
+    };
+    fetchProfile();
+  }, [userEmail]);
+
   const handleNavigate = (screen, email = null) => {
     if (email) {
       setUserEmail(email);
@@ -29,11 +50,11 @@ export default function App() {
   };
 
   const handleSaveProfile = (newProfile) => {
-    setProfileData(newProfile);
+    setProfileData((prev) => ({ ...prev, ...newProfile }));
   };
 
   if (currentScreen === 'Login') {
-    return <LoginScreen onNavigate={handleNavigate} />;
+    return <LoginScreen onNavigate={handleNavigate} onSaveProfile={handleSaveProfile} />;
   }
 
   const renderScreen = () => {
@@ -42,6 +63,7 @@ export default function App() {
         return (
           <CooperativistasScreen
             onNavigate={handleNavigate}
+            userEmail={userEmail}
             profileData={profileData}
             onSaveProfile={handleSaveProfile}
           />
@@ -50,6 +72,8 @@ export default function App() {
         return <GESMujerScreen onNavigate={handleNavigate} />;
       case 'Costeo':
         return <CosteoScreen onNavigate={handleNavigate} />;
+      case 'GuiaEconomia':
+        return <GuiaEconomiaScreen onNavigate={handleNavigate} />;
       case 'Perfil':
         return (
           <PerfilScreen

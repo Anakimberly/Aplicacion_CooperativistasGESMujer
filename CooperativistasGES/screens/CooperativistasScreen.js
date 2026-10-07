@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
@@ -6,6 +6,9 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+
+import { db, auth } from '../firebaseConfig';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const PURPLE = '#5b1378';
 const LIGHT_PURPLE = '#f3e8fb';
@@ -25,9 +28,9 @@ const COOPERATIVAS = [
   'Cooperativa Quiahije',
 ];
 
-export default function CooperativistasScreen({ onNavigate, profileData, onSaveProfile }) {
+export default function CooperativistasScreen({ onNavigate, userEmail, profileData, onSaveProfile }) {
   const [form, setForm] = useState({
-    nombre: profileData?.nombre || '',
+    nombre: profileData?.nombre || profileData?.nombreUsuario || '',
     apellidoPaterno: profileData?.apellidoPaterno || '',
     apellidoMaterno: profileData?.apellidoMaterno || '',
     comunidad: profileData?.comunidad || '',
@@ -35,6 +38,21 @@ export default function CooperativistasScreen({ onNavigate, profileData, onSaveP
     cooperativa: profileData?.cooperativa || '',
     fotoUri: profileData?.fotoUri || null,
   });
+
+  useEffect(() => {
+    if (profileData) {
+      setForm((prev) => ({
+        ...prev,
+        nombre: profileData.nombre || profileData.nombreUsuario || prev.nombre,
+        apellidoPaterno: profileData.apellidoPaterno || prev.apellidoPaterno,
+        apellidoMaterno: profileData.apellidoMaterno || prev.apellidoMaterno,
+        comunidad: profileData.comunidad || prev.comunidad,
+        telefono: profileData.telefono || prev.telefono,
+        cooperativa: profileData.cooperativa || prev.cooperativa,
+        fotoUri: profileData.fotoUri || prev.fotoUri,
+      }));
+    }
+  }, [profileData]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -86,20 +104,47 @@ export default function CooperativistasScreen({ onNavigate, profileData, onSaveP
     }
   };
 
-  const handleGuardar = () => {
-    const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono, cooperativa } = form;
+  const handleGuardar = async () => {
+    const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono, cooperativa, fotoUri } = form;
     if (!nombre || !apellidoPaterno || !apellidoMaterno || !comunidad || !telefono || !cooperativa) {
       Alert.alert('Campos incompletos', 'Por favor llena todos los campos, incluyendo la cooperativa.');
       return;
     }
 
+    const emailToUse = (userEmail || auth.currentUser?.email || '').toLowerCase().trim();
+
+    const perfilActualizado = {
+      nombre: nombre.trim(),
+      nombreUsuario: nombre.trim(),
+      nombreUsuarioLower: nombre.trim().toLowerCase(),
+      apellidoPaterno: apellidoPaterno.trim(),
+      apellidoMaterno: apellidoMaterno.trim(),
+      comunidad: comunidad.trim(),
+      telefono: telefono.trim(),
+      cooperativa,
+      fotoUri: fotoUri || null,
+      correo: emailToUse,
+    };
+
     if (onSaveProfile) {
-      onSaveProfile(form);
+      onSaveProfile(perfilActualizado);
+    }
+
+    // ☁️ Actualizar/guardar en Cloud Firestore usando un ID único por correo de usuario
+    try {
+      if (emailToUse) {
+        await setDoc(doc(db, 'cooperativistas', emailToUse), {
+          ...perfilActualizado,
+          fechaActualizacion: serverTimestamp(),
+        }, { merge: true });
+      }
+    } catch (e) {
+      console.log('Aviso Firestore al guardar:', e);
     }
 
     Alert.alert(
-      '¡Registro Guardado!',
-      `Cooperativista ${nombre} ${apellidoPaterno} registrada correctamente.`,
+      '¡Perfil Actualizado!',
+      `Tus datos han sido guardados correctamente en la base de datos.`,
       [
         {
           text: 'Ver Mi Perfil',
@@ -138,7 +183,7 @@ export default function CooperativistasScreen({ onNavigate, profileData, onSaveP
       >
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Registro de cooperativista</Text>
+            <Text style={styles.cardTitle}>Registro y actualización de datos</Text>
 
             {/* ── Selector de Foto de Perfil ── */}
             <View style={styles.photoPickerContainer}>
@@ -201,7 +246,7 @@ export default function CooperativistasScreen({ onNavigate, profileData, onSaveP
             </View>
 
             <TouchableOpacity style={styles.btnGuardar} onPress={handleGuardar}>
-              <Text style={styles.btnGuardarText}>Guardar Registro</Text>
+              <Text style={styles.btnGuardarText}>Guardar Datos</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

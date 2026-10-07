@@ -132,10 +132,15 @@ export default function InformacionScreen({ onNavigate }) {
 
           <View style={styles.divider} />
 
-          <View style={styles.contactRow}>
+          <TouchableOpacity
+            style={styles.contactRow}
+            onPress={() => handleAbrirEnlace('https://www.facebook.com/gesmujer.rosario.castellanos.ac?locale=es_LA')}
+            activeOpacity={0.7}
+          >
             <Ionicons name='logo-facebook' size={20} color='#1877F2' />
             <Text style={styles.contactText}>GESMujer Oaxaca</Text>
-          </View>
+            <Ionicons name='open-outline' size={16} color='#888' />
+          </TouchableOpacity>
         </View>
 
         {/* ── mensaje de cierre ── */}

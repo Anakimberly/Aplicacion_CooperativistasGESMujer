@@ -17,7 +17,7 @@ const slides = [
 const categories = [
   { id: '1', name: 'Cooperativistas', icon: 'account-circle-outline', screen: 'Cooperativistas' },
   { id: '2', name: 'Costeo',          icon: 'cash-multiple',           screen: 'Costeo' },
-  { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline',    screen: null },
+  { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline',    screen: 'GuiaEconomia' },
   { id: '4', name: 'GESMujer',        icon: 'gender-female',           screen: 'GESMujer' },
 ];
 
@@ -114,7 +114,7 @@ export default function HomeScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
 
-  // ────────────── ESTILOS DEL CARRUSEL ──────────────
+  // ESTILOS DEL CARRUSEL
   //CONTENEDOR DEL CARRUSEL:
   carouselWrapper: {
     marginHorizontal: 16,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
-  //cada tarjetita del carrusel:.
+  //cada tarjetita del carrusel
   slide: {
     width: width - 32,
     paddingRight: 16, // separa las tarjetas del carrusel
