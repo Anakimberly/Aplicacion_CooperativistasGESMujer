@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
-  ScrollView, KeyboardAvoidingView, Platform, Image, Alert, Dimensions,
+  ScrollView, KeyboardAvoidingView, Platform, Image, Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,17 +19,15 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
   // Campos de Login
   const [usuario, setUsuario] = useState(''); // Puede ser correo o nombre de usuario
   const [contrasenaLogin, setContrasenaLogin] = useState('');
-  const [verPasswordLogin, setVerPasswordLogin] = useState(false);
 
   // Campos de Registro
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [correoRegistro, setCorreoRegistro] = useState('');
   const [contrasenaRegistro, setContrasenaRegistro] = useState('');
-  const [verPasswordReg, setVerPasswordReg] = useState(false);
 
   const [cargando, setCargando] = useState(false);
 
-  // 🔑 Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)
+  //  Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)                                
   const handleLogin = async () => {
     const inputUserClean = usuario.trim();
     const inputUserLower = inputUserClean.toLowerCase();
@@ -44,15 +42,18 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     let emailToUse = inputUserClean;
 
     try {
+      // Si el input no contiene '@', buscar el correo asociado al usuario o nombre en Firestore
       if (!inputUserClean.includes('@')) {
         let userData = null;
 
+        // 1. Buscar por nombreUsuarioLower
         let q = query(
           collection(db, 'cooperativistas'),
           where('nombreUsuarioLower', '==', inputUserLower)
         );
         let querySnapshot = await getDocs(q);
 
+        // 2. Buscar por nombreUsuario exacto
         if (querySnapshot.empty) {
           q = query(
             collection(db, 'cooperativistas'),
@@ -61,6 +62,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
           querySnapshot = await getDocs(q);
         }
 
+        // 3. Buscar por campo 'nombre'
         if (querySnapshot.empty) {
           q = query(
             collection(db, 'cooperativistas'),
@@ -90,6 +92,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
           return;
         }
       } else {
+        // Si ingresó un correo con '@', cargar los datos del perfil desde Firestore
         try {
           const docRef = doc(db, 'cooperativistas', emailToUse.toLowerCase());
           const docSnap = await getDoc(docRef);
@@ -101,6 +104,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
         }
       }
 
+      // Iniciar sesión en Firebase Auth
       await signInWithEmailAndPassword(auth, emailToUse.toLowerCase(), passToUse);
       onNavigate('Home', emailToUse.toLowerCase());
     } catch (error) {
@@ -122,7 +126,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     }
   };
 
-  // 📝 Registrar Nueva Cooperativista
+  //  Registrar Nueva Cooperativista (solo Usuario, Correo y Contraseña)
   const handleRegister = async () => {
     const usernameToUse = nombreUsuario.trim();
     const emailToUse = correoRegistro.trim().toLowerCase();
@@ -148,13 +152,16 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     };
 
     try {
+      // 1. Crear usuario en Firebase Auth
       await createUserWithEmailAndPassword(auth, emailToUse, passToUse);
 
+      // 2. Guardar documento único en Firestore usando el correo como ID de documento
       await setDoc(doc(db, 'cooperativistas', emailToUse), {
         ...perfilGuardar,
         fechaCreacion: serverTimestamp(),
       }, { merge: true });
 
+      // 3. Actualizar perfil local
       if (onSaveProfile) {
         onSaveProfile(perfilGuardar);
       }
@@ -191,150 +198,107 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-          bounces={false}
         >
-          {/* Header Curvado Domo Morado */}
-          <View style={styles.headerContainer}>
-            <View style={styles.headerArc}>
-              <Image
-                source={require('../assets/LOGOGES.png')}
-                style={styles.logo}
-                resizeMode='contain'
-              />
-              <Text style={styles.appName}>GESMujer</Text>
-              <Text style={styles.appSubtitle}>Economía Social de las Mujeres</Text>
-            </View>
+          {/* Logo */}
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../assets/LOGOGES.png')}
+              style={styles.logo}
+              resizeMode='contain'
+            />
           </View>
 
-          {/* Formulario en Fondo Blanco */}
-          <View style={styles.bodyContainer}>
+          {/* Título de sección */}
+          <Text style={styles.titleText}>
+            {modo === 'login' ? 'Iniciar Sesión' : 'Registro de Cuenta'}
+          </Text>
+
+          {/* Formulario */}
+          <View style={styles.formContainer}>
             {modo === 'login' ? (
               <>
-                {/* Campo: Usuario o Correo */}
-                <View style={styles.pillInputContainer}>
-                  <TextInput
-                    style={styles.pillInput}
-                    value={usuario}
-                    onChangeText={setUsuario}
-                    autoCapitalize='none'
-                    placeholder='usuario@gmail.com o usuario'
-                    placeholderTextColor='#8A4B9E'
-                  />
-                </View>
+                <Text style={styles.label}>Nombre de usuario o Correo:</Text>              
+                <TextInput
+                  style={styles.input}
+                  value={usuario}
+                  onChangeText={setUsuario}
+                  autoCapitalize='none'
+                  placeholder='Tu usuario o correo'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                />
 
-                {/* Campo: Contraseña con Ojo */}
-                <View style={styles.pillInputContainer}>
-                  <TextInput
-                    style={styles.pillInput}
-                    value={contrasenaLogin}
-                    onChangeText={setContrasenaLogin}
-                    secureTextEntry={!verPasswordLogin}
-                    placeholder='••••••••'
-                    placeholderTextColor='#8A4B9E'
-                  />
-                  <TouchableOpacity
-                    onPress={() => setVerPasswordLogin(!verPasswordLogin)}
-                    style={styles.eyeBtn}
-                  >
-                    <Ionicons
-                      name={verPasswordLogin ? 'eye-off-outline' : 'eye-outline'}
-                      size={20}
-                      color={PURPLE}
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Enlace Toggle */}
-                <TouchableOpacity
-                  style={styles.toggleBtn}
-                  onPress={() => setModo('registro')}
-                >
-                  <Text style={styles.toggleBtnText}>¿No tienes cuenta? Registrate aquí</Text>
-                </TouchableOpacity>
-
-                {/* Botón Principal (Iniciar Sesión) */}
-                <TouchableOpacity
-                  style={styles.primaryPillButton}
-                  onPress={handleLogin}
-                  disabled={cargando}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.primaryButtonText}>
-                    {cargando ? 'Procesando...' : 'Iniciar Sesión'}
-                  </Text>
-                </TouchableOpacity>
+                <Text style={styles.label}>Contraseña:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={contrasenaLogin}
+                  onChangeText={setContrasenaLogin}
+                  secureTextEntry
+                  placeholder='••••••••'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                />
               </>
             ) : (
               <>
-                {/* Campo: Nombre de usuario */}
-                <View style={styles.pillInputContainer}>
-                  <TextInput
-                    style={styles.pillInput}
-                    value={nombreUsuario}
-                    onChangeText={setNombreUsuario}
-                    autoCapitalize='none'
-                    placeholder='Nombre de usuario'
-                    placeholderTextColor='#8A4B9E'
-                  />
-                </View>
+                <Text style={styles.label}>Nombre de usuario:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={nombreUsuario}
+                  onChangeText={setNombreUsuario}
+                  autoCapitalize='none'
+                  placeholder='Ej. maria_oaxaca'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                />
 
-                {/* Campo: Correo electrónico */}
-                <View style={styles.pillInputContainer}>
-                  <TextInput
-                    style={styles.pillInput}
-                    value={correoRegistro}
-                    onChangeText={setCorreoRegistro}
-                    keyboardType='email-address'
-                    autoCapitalize='none'
-                    placeholder='Correo electrónico'
-                    placeholderTextColor='#8A4B9E'
-                  />
-                </View>
+                <Text style={styles.label}>Correo electrónico:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={correoRegistro}
+                  onChangeText={setCorreoRegistro}
+                  keyboardType='email-address'
+                  autoCapitalize='none'
+                  placeholder='ejemplo@gesmujer.org'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                />
 
-                {/* Campo: Contraseña */}
-                <View style={styles.pillInputContainer}>
-                  <TextInput
-                    style={styles.pillInput}
-                    value={contrasenaRegistro}
-                    onChangeText={setContrasenaRegistro}
-                    secureTextEntry={!verPasswordReg}
-                    placeholder='Contraseña (mínimo 6 caracteres)'
-                    placeholderTextColor='#8A4B9E'
-                  />
-                  <TouchableOpacity
-                    onPress={() => setVerPasswordReg(!verPasswordReg)}
-                    style={styles.eyeBtn}
-                  >
-                    <Ionicons
-                      name={verPasswordReg ? 'eye-off-outline' : 'eye-outline'}
-                      size={20}
-                      color={PURPLE}
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Enlace Toggle */}
-                <TouchableOpacity
-                  style={styles.toggleBtn}
-                  onPress={() => setModo('login')}
-                >
-                  <Text style={styles.toggleBtnText}>¿Ya tienes cuenta? Inicia sesión</Text>
-                </TouchableOpacity>
-
-                {/* Botón Principal (Crear Mi Cuenta) */}
-                <TouchableOpacity
-                  style={styles.primaryPillButton}
-                  onPress={handleRegister}
-                  disabled={cargando}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.primaryButtonText}>
-                    {cargando ? 'Procesando...' : 'Crear Mi Cuenta'}
-                  </Text>
-                </TouchableOpacity>
+                <Text style={styles.label}>Contraseña (mínimo 6 caracteres):</Text>
+                <TextInput
+                  style={styles.input}
+                  value={contrasenaRegistro}
+                  onChangeText={setContrasenaRegistro}
+                  secureTextEntry
+                  placeholder='••••••••'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                />
               </>
             )}
           </View>
+
+          {/* Botón Principal */}
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={modo === 'login' ? handleLogin : handleRegister}
+            disabled={cargando}
+          >
+            <Text style={styles.primaryButtonText}>
+              {cargando
+                ? 'Procesando...'
+                : modo === 'login'
+                ? 'Iniciar Sesión'
+                : 'Crear Mi Cuenta'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Alternar entre Login y Registro */}
+          <TouchableOpacity
+            style={styles.toggleButton}
+            onPress={() => setModo(modo === 'login' ? 'registro' : 'login')}
+          >
+            <Text style={styles.toggleButtonText}>
+              {modo === 'login'
+                ? '¿Eres nueva? Toca aquí para Registrarte'
+                : '¿Ya tienes cuenta? Toca aquí para Iniciar Sesión'}
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -342,117 +306,54 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    backgroundColor: '#FFFFFF',
-  },
+  container: { flex: 1, backgroundColor: PURPLE },
+  scrollContent: { paddingHorizontal: 32, paddingVertical: 24 },
 
-  // ── Header Curvado Domo Morado ──
-  headerContainer: {
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    overflow: 'hidden',
-  },
-  headerArc: {
-    width: '140%',
-    backgroundColor: PURPLE,
-    borderBottomLeftRadius: 240,
-    borderBottomRightRadius: 240,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === 'ios' ? 45 : 35,
-    paddingBottom: 35,
-  },
-  logo: {
-    width: 110,
-    height: 110,
-    marginBottom: 6,
-  },
-  appName: {
-    color: '#FFFFFF',
-    fontSize: 32,
+  logoContainer: { alignItems: 'center', marginBottom: 20 },
+  logo: { width: 160, height: 160 },
+
+  titleText: {
+    color: 'white',
+    fontSize: 20,
     fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  appSubtitle: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 13.5,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-
-  // ── Formulario en Fondo Blanco ──
-  bodyContainer: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 36,
-    paddingTop: 35,
-    paddingBottom: 40,
-  },
-
-  // ── Inputs Ovalados (Pill) ──
-  pillInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: PURPLE,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    height: 48,
-    marginBottom: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  pillInput: {
-    flex: 1,
-    color: PURPLE,
-    fontSize: 15,
-    fontWeight: '600',
-    height: '100%',
     textAlign: 'center',
-  },
-  eyeBtn: {
-    position: 'absolute',
-    right: 14,
-    padding: 4,
-  },
-
-  // ── Botón Toggle Texto ──
-  toggleBtn: {
-    alignItems: 'center',
-    marginTop: 4,
     marginBottom: 20,
   },
-  toggleBtnText: {
-    color: '#777777',
-    fontSize: 13.5,
-    fontWeight: '500',
-    textAlign: 'center',
+
+  formContainer: { marginBottom: 20 },
+  label: { color: 'white', fontSize: 14, fontWeight: '600', marginTop: 14, marginBottom: 4 },
+  input: {
+    borderBottomWidth: 1.5,
+    borderBottomColor: 'white',
+    color: 'white',
+    fontSize: 15,
+    paddingVertical: 6,
   },
 
-  // ── Botón Principal Ovalado (Pill) Centrado ──
-  primaryPillButton: {
-    backgroundColor: PURPLE,
+  primaryButton: {
+    backgroundColor: 'white',
     borderRadius: 25,
-    height: 46,
-    paddingHorizontal: 40,
-    alignSelf: 'center',
-    justifyContent: 'center',
+    paddingVertical: 14,
     alignItems: 'center',
-    minWidth: 160,
+    marginTop: 10,
     elevation: 3,
-    shadowColor: PURPLE,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
   },
   primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15.5,
-    fontWeight: '700',
+    color: PURPLE,
+    fontSize: 16,
+    fontWeight: '800',
+  },
+
+  toggleButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  toggleButtonText: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 13.5,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+    textAlign: 'center',
   },
 });
