@@ -60,7 +60,7 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  // 📷 Abrir galería para seleccionar foto
+  // Abrir galería para seleccionar foto
   const handleSeleccionarFoto = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -130,7 +130,7 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
       onSaveProfile(perfilActualizado);
     }
 
-    // ☁️ Actualizar/guardar en Cloud Firestore usando un ID único por correo de usuario
+    //  Actualizar/guardar en Cloud Firestore usando un ID único por correo de usuario
     try {
       if (emailToUse) {
         await setDoc(doc(db, 'cooperativistas', emailToUse), {
@@ -143,14 +143,13 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
     }
 
     Alert.alert(
-      '¡Perfil Actualizado!',
-      `Tus datos han sido guardados correctamente en la base de datos.`,
+      '¡Registro Guardado!',
+      'Tus datos han sido guardados correctamente.',
       [
         {
-          text: 'Ver Mi Perfil',
-          onPress: () => onNavigate('Perfil'),
+          text: 'Aceptar',
+          onPress: () => onNavigate('Home'),
         },
-        { text: 'Aceptar' },
       ]
     );
   };

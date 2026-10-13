@@ -29,7 +29,12 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
 
   const [cargando, setCargando] = useState(false);
 
-  // Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)
+  // Función para alternar modo limpiando espacios accidentales
+  const cambiarModo = (nuevoModo) => {
+    setModo(nuevoModo);
+  };
+
+  // 🔑 Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)
   const handleLogin = async () => {
     const inputUserClean = usuario.trim();
     const inputUserLower = inputUserClean.toLowerCase();
@@ -122,7 +127,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     }
   };
 
-  //  Registrar Nueva Cuenta
+  // 📝 Registrar Nueva Cuenta
   const handleRegister = async () => {
     const usernameToUse = nombreUsuario.trim();
     const emailToUse = correoRegistro.trim().toLowerCase();
@@ -193,7 +198,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
           showsVerticalScrollIndicator={false}
           bounces={false}
         >
-          {/* Encabezado con Arco Púrpura */}
+          {/* Domo Curvado Superior Púrpura */}
           <View style={styles.headerContainer}>
             <View style={styles.headerArc}>
               <Image
@@ -206,30 +211,30 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
             </View>
           </View>
 
-          {/* Formulario en Fondo Blanco */}
+          {/* Formulario en Fondo Blanco Centrado */}
           <View style={styles.bodyContainer}>
             {modo === 'login' ? (
               <>
-                {/* Campo: Usuario o Correo */}
+                {/* Campo: Ingrese su nombre de usuario o correo */}
                 <View style={styles.pillInputContainer}>
                   <TextInput
                     style={styles.pillInput}
                     value={usuario}
                     onChangeText={setUsuario}
                     autoCapitalize='none'
-                    placeholder='usuario@gmail.com o usuario'
+                    placeholder='Ingrese su nombre de usuario o correo'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                 </View>
 
-                {/* Campo: Contraseña con Ojo */}
+                {/* Campo: Ingrese la contraseña con Ojo */}
                 <View style={styles.passwordPillContainer}>
                   <TextInput
                     style={styles.passwordInput}
                     value={contrasenaLogin}
                     onChangeText={setContrasenaLogin}
                     secureTextEntry={!verPasswordLogin}
-                    placeholder='••••••••'
+                    placeholder='Ingrese la contraseña'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                   <TouchableOpacity
@@ -248,7 +253,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                 {/* Enlace para alternar a Registro */}
                 <TouchableOpacity
                   style={styles.toggleBtn}
-                  onPress={() => setModo('registro')}
+                  onPress={() => cambiarModo('registro')}
                   activeOpacity={0.7}
                 >
                   <Text style={styles.toggleBtnText}>¿No tienes cuenta? Regístrate aquí</Text>
@@ -268,19 +273,19 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
               </>
             ) : (
               <>
-                {/* Campo: Nombre de usuario */}
+                {/* Campo 1: Ingrese su nombre de usuaria */}
                 <View style={styles.pillInputContainer}>
                   <TextInput
                     style={styles.pillInput}
                     value={nombreUsuario}
                     onChangeText={setNombreUsuario}
                     autoCapitalize='none'
-                    placeholder='Nombre de usuario'
+                    placeholder='Ingrese su nombre de usuario'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                 </View>
 
-                {/* Campo: Correo electrónico */}
+                {/* Campo 2: Ingrese su correo electrónico */}
                 <View style={styles.pillInputContainer}>
                   <TextInput
                     style={styles.pillInput}
@@ -288,19 +293,19 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                     onChangeText={setCorreoRegistro}
                     keyboardType='email-address'
                     autoCapitalize='none'
-                    placeholder='Correo electrónico'
+                    placeholder='Ingrese su correo electrónico'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                 </View>
 
-                {/* Campo: Contraseña */}
+                {/* Campo 3: Ingrese la contraseña */}
                 <View style={styles.passwordPillContainer}>
                   <TextInput
                     style={styles.passwordInput}
                     value={contrasenaRegistro}
                     onChangeText={setContrasenaRegistro}
                     secureTextEntry={!verPasswordReg}
-                    placeholder='Contraseña (mínimo 6 caracteres)'
+                    placeholder='Ingrese la contraseña'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                   <TouchableOpacity
@@ -319,7 +324,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                 {/* Enlace para alternar a Login */}
                 <TouchableOpacity
                   style={styles.toggleBtn}
-                  onPress={() => setModo('login')}
+                  onPress={() => cambiarModo('login')}
                   activeOpacity={0.7}
                 >
                   <Text style={styles.toggleBtnText}>¿Ya tienes cuenta? Inicia sesión</Text>
@@ -355,7 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  // ── Encabezado con Arco Púrpura ──
+  // ── Domo Curvado Superior Púrpura ──
   headerContainer: {
     width: '100%',
     alignItems: 'center',
@@ -390,29 +395,30 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ── Formulario en Fondo Blanco ──
+  // ── Formulario en Fondo Blanco Centrado ──
   bodyContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 36,
-    paddingTop: 155,
-    paddingBottom: 40,
+    paddingHorizontal: 32,
+    paddingTop: 65,
+    paddingBottom: 50,
+    justifyContent: 'center',
   },
 
-  // ── Inputs Ovalados con Borde Morado ──
+  // ── Inputs Ovalados (Pill) con Borde Morado ──
   pillInputContainer: {
     borderWidth: 1.5,
     borderColor: PURPLE,
     borderRadius: 25,
-    paddingHorizontal: 20,
-    height: 48,
+    paddingHorizontal: 16,
+    height: 50,
     marginBottom: 16,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
   },
   pillInput: {
     color: PURPLE,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
     paddingVertical: 0,
@@ -425,15 +431,15 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: PURPLE,
     borderRadius: 25,
-    paddingHorizontal: 20,
-    height: 48,
-    marginBottom: 12,
+    paddingHorizontal: 16,
+    height: 50,
+    marginBottom: 14,
     backgroundColor: '#FFFFFF',
   },
   passwordInput: {
     flex: 1,
     color: PURPLE,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
     paddingVertical: 0,
@@ -444,11 +450,11 @@ const styles = StyleSheet.create({
     padding: 4,
   },
 
-
+  // ── Enlace Toggle Modo ──
   toggleBtn: {
     alignItems: 'center',
-    marginTop: 4,
-    marginBottom: 24,
+    marginTop: 6,
+    marginBottom: 26,
   },
   toggleBtnText: {
     color: '#777777',
@@ -461,12 +467,12 @@ const styles = StyleSheet.create({
   primaryPillButton: {
     backgroundColor: PURPLE,
     borderRadius: 25,
-    height: 46,
+    height: 48,
     paddingHorizontal: 40,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    minWidth: 160,
+    minWidth: 170,
     elevation: 3,
     shadowColor: PURPLE,
     shadowOffset: { width: 0, height: 3 },
