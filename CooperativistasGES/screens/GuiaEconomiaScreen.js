@@ -11,36 +11,12 @@ const LIGHT_PURPLE = '#f3e8fb';
 const GUIAS_EJEMPLO = [
   {
     id: '1',
-    titulo: 'Guía de Economía Social y Solidaria',
-    descripcion: 'Conceptos fundamentales del cooperativismo, trabajo en equipo y economía con perspectiva de género.',
-    categoria: 'Cooperativismo',
-    tamano: '2.4 MB',                   
-    pdfUrl: 'https://www.gesmujer.org', // Reemplazable por URL del PDF en Firebase Storage
+    titulo: 'Guía Práctica de Economía Feminista',
+    descripcion: 'Materiales educativos sobre economía feminista creados por GESMujer para el empoderamiento económico de las mujeres.',
+    categoria: 'Economía Feminista',
+    pdfUrl: 'https://drive.google.com/file/d/1vxv1QFNW3o44mGit2F11NcJhFkkLwiak/view?usp=sharing', 
   },
-  {
-    id: '2',
-    titulo: 'Manual de Costeo Justo para Artesanas',
-    descripcion: 'Cómo calcular materiales, horas de trabajo y fijar precios de venta recomendados sin malbaratar.',
-    categoria: 'Costeo',
-    tamano: '1.8 MB',
-    pdfUrl: 'https://www.gesmujer.org',
-  },
-  {
-    id: '3',
-    titulo: 'Presupuesto Familiar y de Negocio',
-    descripcion: 'Herramientas para separar los gastos personales de los ingresos de la cooperativa.',
-    categoria: 'Finanzas',
-    tamano: '3.1 MB',
-    pdfUrl: 'https://www.gesmujer.org',
-  },
-  {
-    id: '4',
-    titulo: 'Derechos Económicos de las Mujeres',
-    descripcion: 'Cartilla informativa sobre autonomía económica, derechos laborales y prevención de la violencia patrimonial.',
-    categoria: 'Derechos',
-    tamano: '1.5 MB',
-    pdfUrl: 'https://www.gesmujer.org',
-  },
+ 
 ];
 
 export default function GuiaEconomiaScreen({ onNavigate }) {
@@ -113,7 +89,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
 
               <View style={styles.guiaFooter}>
                 <Ionicons name='document-text-outline' size={14} color='#777' />
-                <Text style={styles.guiaMetaText}>PDF • {item.tamano}</Text>
+                <Text style={styles.guiaMetaText}>PDF • Google Drive</Text>
               </View>
             </View>
 
