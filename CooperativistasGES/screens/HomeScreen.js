@@ -9,8 +9,8 @@ const PURPLE = '#5b1378';
 const { width } = Dimensions.get('window');
 
 const slides = [
-  { id: '1', image: require('../assets/carrusel1.jpg') },
   { id: '2', image: require('../assets/carrusel2.1.jpg') },
+  { id: '1', image: require('../assets/carrusel1.jpg') },
   { id: '3', image: require('../assets/carrusel3.jpg') },
 ];
 
@@ -92,7 +92,7 @@ export default function HomeScreen({ onNavigate }) {
             onPress={() => handleCardPress(cat.screen)}
             activeOpacity={cat.screen ? 0.7 : 1}
           >
-            <MaterialCommunityIcons name={cat.icon} size={52} color='#444' />
+            <MaterialCommunityIcons name={cat.icon} size={52} color={PURPLE} />
             <Text style={styles.cardLabel}>{cat.name}</Text>
           </TouchableOpacity>
         ))}
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 160,
     borderRadius: 16,
-  },
+    borderWidth: 3,       // grosor del borde del carrusel 
+    borderColor: PURPLE},  // color del borde del carrusel 
 
   dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#ccc', marginHorizontal: 4 },
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   //card de las categorias
   card: {
     width: (width - 46) / 2,
-    backgroundColor: 'white',
+    backgroundColor: '#f3e5f5', // ← color de fondo de las tarjetas (ej: 'white', '#fce4ec', '#e8f5e9'...)
     borderRadius: 16,
     paddingVertical: 26,
     alignItems: 'center',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: PURPLE, // ← color del texto de las tarjetas (cambia PURPLE por otro color, ej: '#000000')
     textAlign: 'center',
   },
   //boton del navbar  
