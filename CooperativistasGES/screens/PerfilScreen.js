@@ -6,6 +6,9 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
+import { db } from '../firebaseConfig';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+
 const PURPLE = '#5b1378';
 const LIGHT_PURPLE = '#f3e8fb';
 const GREEN = '#27ae60';
@@ -35,13 +38,25 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.35,
+        base64: true,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        const selectedUri = result.assets[0].uri;
+        const asset = result.assets[0];
+        const base64Photo = asset.base64 ? `data:image/jpeg;base64,${asset.base64}` : asset.uri;
         if (onSaveProfile) {
-          onSaveProfile({ ...profileData, fotoUri: selectedUri });
+          onSaveProfile({ ...profileData, fotoUri: base64Photo });
+        }
+        if (userEmail) {
+          try {
+            await setDoc(doc(db, 'cooperativistas', userEmail.toLowerCase()), {
+              fotoUri: base64Photo,
+              fechaActualizacion: serverTimestamp(),
+            }, { merge: true });
+          } catch (e) {
+            console.log('Aviso guardando foto en Firestore:', e);
+          }
         }
       }
     } catch (error) {
@@ -59,9 +74,19 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
           {
             text: 'Quitar Foto (Usar Avatar)',
             style: 'destructive',
-            onPress: () => {
+            onPress: async () => {
               if (onSaveProfile) {
                 onSaveProfile({ ...profileData, fotoUri: null });
+              }
+              if (userEmail) {
+                try {
+                  await setDoc(doc(db, 'cooperativistas', userEmail.toLowerCase()), {
+                    fotoUri: null,
+                    fechaActualizacion: serverTimestamp(),
+                  }, { merge: true });
+                } catch (e) {
+                  console.log('Aviso quitando foto en Firestore:', e);
+                }
               }
             },
           },
