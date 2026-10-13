@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity,
+  View, Text, Image, ScrollView, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar, Dimensions,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -9,9 +9,9 @@ const PURPLE = '#5b1378';
 const { width } = Dimensions.get('window');
 
 const slides = [
-  { id: '1', title: 'Las mujeres\nmovemos al mundo', sub: '¡Nuestra soberanía es económica!' },
-  { id: '2', title: 'Cooperativa\nGES Mujer', sub: 'Juntas somos más fuertes' },
-  { id: '3', title: 'Empoderamiento\nEconómico', sub: '¡Cambiando vidas!' },
+  { id: '1', image: require('../assets/carrusel1.jpg') },
+  { id: '2', image: require('../assets/carrusel2.1.jpg') },
+  { id: '3', image: require('../assets/carrusel3.jpg') },
 ];
 
 const categories = [
@@ -72,16 +72,7 @@ export default function HomeScreen({ onNavigate }) {
         >
           {slides.map((slide) => (
             <View key={slide.id} style={styles.slide}>
-              <View style={styles.slideBanner}>
-                <MaterialCommunityIcons
-                  name='gender-female'
-                  size={50}
-                  color='rgba(255,255,255,0.3)'
-                  style={styles.slideIcon}
-                />
-                <Text style={styles.slideTitle}>{slide.title}</Text>
-                <Text style={styles.slideSub}>{slide.sub}</Text>
-              </View>
+              <Image source={slide.image} style={styles.slideImage} resizeMode='cover' />
             </View>
           ))}
         </ScrollView>
@@ -118,7 +109,7 @@ const styles = StyleSheet.create({
   //CONTENEDOR DEL CARRUSEL:
   carouselWrapper: {
     marginHorizontal: 16,
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 16,
     overflow: 'hidden',
   },
@@ -126,29 +117,15 @@ const styles = StyleSheet.create({
   //cada tarjetita del carrusel
   slide: {
     width: width - 32,
-    paddingRight: 16, // separa las tarjetas del carrusel
+    paddingRight: 16,
   },
 
-  
-  slideBanner: {
-    backgroundColor: PURPLE,
+  slideImage: {
+    width: '100%',
+    height: 160,
     borderRadius: 16,
-    padding: 20,
-    height: 130, 
-    justifyContent: 'center',
-    overflow: 'hidden',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 5,
   },
-  
 
-  //icono de la mujer en el carrusel y el tamaño de la letra
-  slideIcon: { position: 'absolute', right: 16, top: 10 },
-  slideTitle: { color: 'white', fontSize: 20, fontWeight: 'bold', lineHeight: 26 },
-  slideSub:   { color: 'rgba(255,255,255,0.85)', fontSize: 12, marginTop: 6 },
   dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#ccc', marginHorizontal: 4 },
   dotActive: { backgroundColor: PURPLE },
