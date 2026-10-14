@@ -9,6 +9,7 @@ const PURPLE = '#5b1378';
 const { width } = Dimensions.get('window');
 
 const slides = [
+  { id: '4', image: require('../assets/carrusel4.jpg') },
   { id: '2', image: require('../assets/carrusel2.1.jpg') },
   { id: '1', image: require('../assets/carrusel1.jpg') },
   { id: '3', image: require('../assets/carrusel3.jpg') },

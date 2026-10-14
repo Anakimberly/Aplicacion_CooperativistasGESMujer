@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View,Text,TouchableOpacity,ScrollView,
+import { View, Text, Image, TouchableOpacity, ScrollView,
   StyleSheet,
   SafeAreaView,
   StatusBar,
@@ -18,39 +18,27 @@ const CARD_HEIGHT = 280;
 const tarjetas = [
   {
     id: '1',
-    iconoTipo: '',
-    icono: '',
-    titulo: '',
-    preview: '',
-    detalle:
-      '',
+    titulo: 'Historia',                          // ← cambia el título
+    preview: 'Conoce cómo nació GESMujer',       // ← cambia el texto del frente
+    imagen: require('../assets/tarjeta1.jpg'),   // ← imagen de la parte de atrás
   },
   {
     id: '2',
-    iconoTipo: '',
-    icono: '',
-    titulo: '',
-    preview: '',
-    detalle: '',
-      
+    titulo: 'Cooperativismo',                          // ← cambia el título
+    preview: 'Juntas construimos una economía justa',  // ← cambia el texto del frente
+    imagen: require('../assets/tarjeta2.jpg'),         // ← imagen de la parte de atrás
   },
   {
     id: '3',
-    iconoTipo: '',
-    icono: '',
-    titulo: '',
-    preview: '',
-    detalle:
-      '',
+    titulo: 'Empoderamiento',                       // ← cambia el título
+    preview: 'Mujeres que transforman su realidad', // ← cambia el texto del frente
+    imagen: require('../assets/tarjeta3.jpg'),      // ← imagen de la parte de atrás
   },
   {
     id: '4',
-    iconoTipo: '',
-    icono: '',
-    titulo: '',
-    preview: '',
-    detalle:
-      '',
+    titulo: 'Contacto',                             // ← cambia el título
+    preview: 'Comunícate con nosotras',             // ← cambia el texto del frente
+    imagen: require('../assets/tarjeta 4.jpg'),     // ← imagen de la parte de atrás
   },
 ];
 
@@ -116,43 +104,20 @@ function FlipCard({ item }) {
       onPress={flipCard}
       style={styles.cardContainer}          
     >
-      {/* ── Cara frontal de las tarjetas ── */}
+      {/* ── Cara frontal: solo texto ── */}
       <Animated.View style={[styles.card, styles.frontCard, frontAnimatedStyle]}>
-        <View style={styles.iconCircle}>
-          {item.iconoTipo === 'material' ? (
-            <MaterialCommunityIcons name={item.icono} size={32} color={PURPLE} />
-          ) : (
-            <Ionicons name={item.icono} size={30} color={PURPLE} />
-          )}
-        </View>
-
         <Text style={styles.frontTitle}>{item.titulo}</Text>
         <Text style={styles.frontPreview}>{item.preview}</Text>
 
         <View style={styles.flipHintContainer}>
-          <Ionicons name="sync-outline" size={13} color={PURPLE} /> 
+          <Ionicons name="sync-outline" size={13} color={PURPLE} />
           <Text style={styles.flipHintText}>Toca para ver más</Text>
         </View>
       </Animated.View>
 
-      {/* ── Cara trasera de las tarjetas ── */}
+      {/* ── Cara trasera: imagen completa ── */}
       <Animated.View style={[styles.card, styles.backCard, backAnimatedStyle]}>
-        <View style={styles.backHeader}>
-          <Text style={styles.backTitle} numberOfLines={1}>
-            {item.titulo}
-          </Text>
-          <Ionicons name="sync-outline" size={15} color="white" />
-        </View>
-
-        <ScrollView
-          style={styles.backScroll}
-          contentContainerStyle={styles.backScrollContent}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={true}
-        >
-          <Text style={styles.backDetailText}>{item.detalle}</Text>
-        </ScrollView>
-
+        <Image source={item.imagen} style={styles.backImage} resizeMode='contain' />
         <Text style={styles.backHintText}>Toca para voltear</Text>
       </Animated.View>
     </TouchableOpacity>
@@ -321,40 +286,28 @@ const styles = StyleSheet.create({
 
   // Cara Trasera
   backCard: {
-    backgroundColor: "#f3e8fb",
-    justifyContent: 'space-between',
-  },
-  backHeader: {
-    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(48, 13, 72, 0.84)',// color de la linea de separacion del titulo y el detalle
-    paddingBottom: 6,
+    borderWidth: 1,
+    borderColor: '#AF7AC5',
+    overflow: 'hidden',
+    padding: 8,
   },
-  backTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: 'black',
-    flex: 1,
-    marginRight: 6,
-  },
-  backScroll: {
-    flex: 1,
-    marginVertical: 6,
-  },
-  backScrollContent: {
-    paddingVertical: 4,
-  },
-  backDetailText: {
-    fontSize: 13.5,
-    color: '#000000',
-    lineHeight: 16,
+  backImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
   },
   backHintText: {
+    position: 'absolute',
+    bottom: 8,
+    alignSelf: 'center',
     fontSize: 10,
-    color: 'rgba(19, 19, 19, 0.7)',
-    textAlign: 'center',
-    marginTop: 2,
+    color: 'white',
+    backgroundColor: 'rgba(91, 19, 120, 0.75)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
 });
