@@ -143,8 +143,7 @@ const styles = StyleSheet.create({
   //card de las categorias
   card: {
     width: (width - 46) / 2,
-    backgroundColor: '#f3e5f5', // ← color de fondo de las tarjetas (ej: 'white', '#fce4ec', '#e8f5e9'...)
-    borderRadius: 16,
+    backgroundColor: '#f3e5f5', 
     paddingVertical: 26,
     alignItems: 'center',
     justifyContent: 'center',
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     fontWeight: '600',
-    color: PURPLE, // ← color del texto de las tarjetas (cambia PURPLE por otro color, ej: '#000000')
+    color: PURPLE, 
     textAlign: 'center',
   },
   //boton del navbar  
