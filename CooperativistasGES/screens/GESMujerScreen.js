@@ -5,6 +5,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView,
   StatusBar,
   Animated,
   Dimensions,
+  Modal,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -18,48 +19,50 @@ const CARD_HEIGHT = 280;
 const tarjetas = [
   {
     id: '1',
-    titulo: 'Historia',                          // ← cambia el título
-    preview: 'Conoce cómo nació GESMujer',       // ← cambia el texto del frente
-    imagen: require('../assets/tarjeta1.jpg'),   // ← imagen de la parte de atrás
+    titulo: 'El eco de una lucha',                          
+    preview: '"Raíces que inspiran: Elvia en GESMujer"',      
+    imagen: require('../assets/tarjeta1.jpg'),   
   },
   {
     id: '2',
-    titulo: 'Cooperativismo',                          // ← cambia el título
-    preview: 'Juntas construimos una economía justa',  // ← cambia el texto del frente
-    imagen: require('../assets/tarjeta2.jpg'),         // ← imagen de la parte de atrás
+    titulo: 'Motivación en acción',                          
+    preview: '"Juntas construimos una economía justa"',  
+    imagen: require('../assets/tarjeta2.jpg'),        
   },
   {
     id: '3',
-    titulo: 'Empoderamiento',                       // ← cambia el título
-    preview: 'Mujeres que transforman su realidad', // ← cambia el texto del frente
-    imagen: require('../assets/tarjeta3.jpg'),      // ← imagen de la parte de atrás
+    titulo: 'Lineas de Acción',                      
+    preview: '"Mujeres que transforman su realidad"', 
+    imagen: require('../assets/tarjeta3.jpg'),      
   },
   {
     id: '4',
-    titulo: 'Contacto',                             // ← cambia el título
-    preview: 'Comunícate con nosotras',             // ← cambia el texto del frente
-    imagen: require('../assets/tarjeta 4.jpg'),     // ← imagen de la parte de atrás
+    titulo: 'Mujer Indigena',                             
+    preview: ' "Nuestra existencia es, en sí misma, un acto de resistencia colectiva"',             
+    imagen: require('../assets/tarjeta4.1.jpg'),    
   },
 ];
 
-function FlipCard({ item }) {
+function FlipCard({ item, onOpenModal }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   const flipCard = () => {
     if (isFlipped) {
-      Animated.spring(animatedValue, {
+      Animated.timing(animatedValue, {
         toValue: 0,
-        friction: 8,
-        tension: 12,
+        duration: 250,
         useNativeDriver: true,
       }).start();
       setIsFlipped(false);
     } else {
-      Animated.spring(animatedValue, {
+      // tiempo de la imagen para que se vea antes de abrir el modal
+      if (onOpenModal) {
+        onOpenModal(item);
+      }
+      Animated.timing(animatedValue, {
         toValue: 180,
-        friction: 8,
-        tension: 12,
+        duration: 250,
         useNativeDriver: true,
       }).start();
       setIsFlipped(true);
@@ -77,7 +80,6 @@ function FlipCard({ item }) {
     outputRange: ['180deg', '360deg'],
   });
 
-  
   const frontOpacity = animatedValue.interpolate({
     inputRange: [89, 90],
     outputRange: [1, 0],
@@ -107,15 +109,18 @@ function FlipCard({ item }) {
       {/* ── Cara frontal: solo texto ── */}
       <Animated.View style={[styles.card, styles.frontCard, frontAnimatedStyle]}>
         <Text style={styles.frontTitle}>{item.titulo}</Text>
-        <Text style={styles.frontPreview}>{item.preview}</Text>
+
+        <View style={styles.frontPreviewContainer}>
+          <Text style={styles.frontPreview}>{item.preview}</Text>
+        </View>
 
         <View style={styles.flipHintContainer}>
-          <Ionicons name="sync-outline" size={13} color={PURPLE} />
-          <Text style={styles.flipHintText}>Toca para ver más</Text>
+          <Ionicons name="scan-outline" size={14} color={PURPLE} />
+          <Text style={styles.flipHintText}>Toca para ampliar</Text>
         </View>
       </Animated.View>
 
-      {/* ── Cara trasera: imagen completa ── */}
+      {/* ── Cara trasera parte chiquita de la imagen ── */}
       <Animated.View style={[styles.card, styles.backCard, backAnimatedStyle]}>
         <Image source={item.imagen} style={styles.backImage} resizeMode='contain' />
         <Text style={styles.backHintText}>Toca para voltear</Text>
@@ -125,6 +130,8 @@ function FlipCard({ item }) {
 }
 
 export default function GESMujerScreen({ onNavigate }) {
+  const [modalItem, setModalItem] = useState(null);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={PURPLE} />
@@ -134,27 +141,67 @@ export default function GESMujerScreen({ onNavigate }) {
         <TouchableOpacity onPress={() => onNavigate('Home')} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>GES Mujer</Text>
+        <Text style={styles.headerTitle}>Fuerza Cooperativa</Text>
         <View style={{ width: 36 }} />
       </View>
 
       {/* ── Subtitulo ── */}
       <View style={styles.subtitleBox}>
-        <Text style={styles.subtitle}>Género, Equidad y Salud</Text>
+        <Text style={styles.subtitle}>"De la Raíz a la Acción: El Legado Cooperativo" </Text>
         <Text style={styles.subtitleSub}>Toca cualquier tarjeta para conocer más</Text>
       </View>
 
-      
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.grid}>
           {tarjetas.map((item) => (
-            <FlipCard key={item.id} item={item} />
+            <FlipCard key={item.id} item={item} onOpenModal={(target) => setModalItem(target)} />
           ))}
         </View>
       </ScrollView>
+
+      {/* ── Modal de imagen en grande con fondo desvanecido/oscuro ── */}
+      <Modal
+        visible={!!modalItem}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalItem(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackgroundDismiss}
+            activeOpacity={1}
+            onPress={() => setModalItem(null)}
+          />
+
+          <View style={styles.modalContent}>
+            {/* Botón cerrar */}
+            <TouchableOpacity
+              style={styles.modalCloseBtn}
+              onPress={() => setModalItem(null)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="close" size={26} color="white" />
+            </TouchableOpacity>
+
+            {modalItem && (
+              <>
+                <Text style={styles.modalTitle}>{modalItem.titulo}</Text>
+                <View style={styles.modalImageContainer}>
+                  <Image
+                    source={modalItem.imagen}
+                    style={styles.modalImage}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={styles.modalHint}>Toca en cualquier parte para cerrar</Text>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -254,19 +301,23 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   frontTitle: {
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: '700',
     color: PURPLE,
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 4,
+  },
+  frontPreviewContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
   },
   frontPreview: {
     fontSize: 14,
-    color: '#666',
+    color: '#555',
     textAlign: 'center',
-    lineHeight: 16,
-    marginTop: 4,
-    flex: 1,
+    lineHeight: 20,
   },
   flipHintContainer: {
     flexDirection: 'row',
@@ -309,5 +360,63 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 10,
+  },
+
+  // Modal de imagen en grande
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.82)', // Fondo desvanecido oscuro
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  modalBackgroundDismiss: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modalContent: {
+    width: '100%',
+    maxHeight: '90%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalCloseBtn: {
+    alignSelf: 'flex-end',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderRadius: 20,
+    padding: 6,
+    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  modalImageContainer: {
+    width: '100%',
+    height: Dimensions.get('window').height * 0.65,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    overflow: 'hidden',
+    padding: 8,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  modalImage: {
+    width: '100%',
+    height: '100%',
+  },
+  modalHint: {
+    marginTop: 14,
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.75)',
   },
 });
