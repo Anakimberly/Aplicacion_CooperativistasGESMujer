@@ -25,7 +25,7 @@ export default function App() {
     cooperativa: '',
   });
 
-  // Cargar perfil desde Firestore cuando cambia el correo del usuario
+ 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!userEmail) return;
