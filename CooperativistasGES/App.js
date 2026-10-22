@@ -71,7 +71,7 @@ export default function App() {
       case 'GESMujer':
         return <GESMujerScreen onNavigate={handleNavigate} />;
       case 'Costeo':
-        return <CosteoScreen onNavigate={handleNavigate} />;
+        return <CosteoScreen onNavigate={handleNavigate} userEmail={userEmail} />;
       case 'GuiaEconomia':
         return <GuiaEconomiaScreen onNavigate={handleNavigate} />;
       case 'Perfil':

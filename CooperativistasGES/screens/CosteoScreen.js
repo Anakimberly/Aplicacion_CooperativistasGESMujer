@@ -1,24 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, StatusBar,
-  ScrollView, KeyboardAvoidingView, Platform, Alert,
+  ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { db } from '../firebaseConfig';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  onSnapshot,
+  serverTimestamp,
+} from 'firebase/firestore';
 
 const PURPLE = '#5b1378';
 const LIGHT_PURPLE = '#f3e8fb';
 const GREEN = '#27ae60';
 const LIGHT_GREEN = '#e8f8f5';
 
-export default function CosteoScreen({ onNavigate }) {
+export default function CosteoScreen({ onNavigate, userEmail }) {
   
   const [activeTab, setActiveTab] = useState('formulario');
 
-  
   const [nombreProducto, setNombreProducto] = useState('');
   const [categoria, setCategoria] = useState('');
 
@@ -31,41 +39,48 @@ export default function CosteoScreen({ onNavigate }) {
   const [gastosTransporte, setGastosTransporte] = useState('');
   const [margenGanancia, setMargenGanancia] = useState('30');
 
-  // Lista de productos guardados (simulacion)
-  const [productosGuardados, setProductosGuardados] = useState([
-    {
-      id: '1',
-      nombre: 'Blusa bordada a mano',
-      categoria: 'Textil',
-      materialesCount: 3,
-      totalMateriales: 120,
-      horas: 4,
-      costoHora: 50,
-      totalManoObra: 200,
-      transporte: 20,
-      costoProduccion: 340,
-      margen: 30,
-      ganancia: 102,
-      precioVenta: 442,
-      fecha: '21/09/2026',
-    },
-    {
-      id: '2',
-      nombre: 'Mermelada artesanal de mango',
-      categoria: 'Alimentos',
-      materialesCount: 4,
-      totalMateriales: 35,
-      horas: 2,
-      costoHora: 40,
-      totalManoObra: 80,
-      transporte: 10,
-      costoProduccion: 125,
-      margen: 40,
-      ganancia: 50,
-      precioVenta: 175,
-      fecha: '20/09/2026',
-    },
-  ]);
+  // Lista de productos guardados reales desde Firestore
+  const [productosGuardados, setProductosGuardados] = useState([]);
+  const [cargandoCosteos, setCargandoCosteos] = useState(true);
+  const [guardando, setGuardando] = useState(false);
+
+  
+  useEffect(() => {
+    const emailNormalizado = (userEmail || '').trim().toLowerCase();
+    if (!emailNormalizado) {
+      setCargandoCosteos(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, 'productosCosteados'),
+      where('userEmail', '==', emailNormalizado)
+    );
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const lista = snapshot.docs.map((docSnap) => ({
+          id: docSnap.id,
+          ...docSnap.data(),
+        }));
+        // Ordenar del más reciente al más antiguo
+        lista.sort((a, b) => {
+          const tA = a.fechaCreacion?.seconds || 0;
+          const tB = b.fechaCreacion?.seconds || 0;
+          return tB - tA;
+        });
+        setProductosGuardados(lista);
+        setCargandoCosteos(false);
+      },
+      (error) => {
+        console.log('Error al escuchar costeos en Firestore:', error);
+        setCargandoCosteos(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [userEmail]);
 
   // Funciones para materiales
   const handleMaterialChange = (id, field, value) => {
@@ -107,7 +122,7 @@ export default function CosteoScreen({ onNavigate }) {
   const precioVentaRecomendado = costoProduccionTotal + montoGanancia;
 
   // Guardar nuevo producto
-  const handleGuardar = () => {
+  const handleGuardar = async () => {
     if (!nombreProducto.trim()) {
       Alert.alert('Campo incompleto', 'Por favor ingresa el nombre del producto.');
       return;
@@ -117,10 +132,13 @@ export default function CosteoScreen({ onNavigate }) {
       return;
     }
 
+    const emailNormalizado = (userEmail || '').trim().toLowerCase();
+
     const nuevoProd = {
-      id: Date.now().toString(),
-      nombre: nombreProducto,
-      categoria: categoria || 'General',
+      userEmail: emailNormalizado,
+      nombre: nombreProducto.trim(),
+      categoria: categoria.trim() || 'General',
+      materiales: materiales.filter((m) => m.nombre && m.costo),
       materialesCount: materiales.filter((m) => m.nombre).length || 1,
       totalMateriales,
       horas,
@@ -134,36 +152,39 @@ export default function CosteoScreen({ onNavigate }) {
       fecha: new Date().toLocaleDateString('es-MX'),
     };
 
-    setProductosGuardados((prev) => [nuevoProd, ...prev]);
+    setGuardando(true);
 
-    // ☁️ Guardar en Firebase Cloud Firestore
+    //seccion para guardar en firebase firestore
     try {
-      addDoc(collection(db, 'productosCosteados'), {
+      await addDoc(collection(db, 'productosCosteados'), {
         ...nuevoProd,
         fechaCreacion: serverTimestamp(),
       });
-    } catch (e) {
-      console.log('Aviso Firestore:', e);
-    }
 
-    Alert.alert(
-      '¡Producto Guardado!',
-      `El producto "${nombreProducto}" se guardó en tu lista de costeos con un precio sugerido de $${precioVentaRecomendado.toFixed(2)}.`,
-      [
-        {
-          text: 'Ver Lista de Productos',
-          onPress: () => {
-            // Limpiar formulario y cambiar a pestaña de guardados
-            setNombreProducto('');
-            setCategoria('');
-            setMateriales([{ id: '1', nombre: '', costo: '' }]);
-            setHorasTrabajo('');
-            setGastosTransporte('');
-            setActiveTab('guardados');
+      Alert.alert(
+        '¡Producto Guardado!',
+        `El producto "${nombreProducto}" se guardó en tu lista de costeos con un precio sugerido de $${precioVentaRecomendado.toFixed(2)}.`,
+        [
+          {
+            text: 'Ver Lista de Productos',
+            onPress: () => {
+              // Limpiar formulario y cambiar a pestaña de guardados
+              setNombreProducto('');
+              setCategoria('');
+              setMateriales([{ id: '1', nombre: '', costo: '' }]);
+              setHorasTrabajo('');
+              setGastosTransporte('');
+              setActiveTab('guardados');
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    } catch (e) {
+      console.log('Error al guardar costeo en Firestore:', e);
+      Alert.alert('Error', 'No se pudo guardar el producto en la nube. Revisa tu conexión a internet.');
+    } finally {
+      setGuardando(false);
+    }
   };
 
   const handleEliminarProducto = (id, nombre) => {
@@ -175,8 +196,14 @@ export default function CosteoScreen({ onNavigate }) {
         {
           text: 'Eliminar',
           style: 'destructive',
-          onPress: () => {
-            setProductosGuardados((prev) => prev.filter((p) => p.id !== id));
+          onPress: async () => {
+            try {
+              // Borrar documento de Firebase Firestore
+              await deleteDoc(doc(db, 'productosCosteados', id));
+            } catch (error) {
+              console.log('Error al eliminar costeo:', error);
+              Alert.alert('Error', 'No se pudo eliminar el producto de la nube.');
+            }
           },
         },
       ]
@@ -440,8 +467,16 @@ export default function CosteoScreen({ onNavigate }) {
                 <Text style={styles.priceBannerAmount}>${precioVentaRecomendado.toFixed(2)}</Text>
               </View>
 
-              <TouchableOpacity style={styles.btnGuardar} onPress={handleGuardar}>
-                <Text style={styles.btnGuardarText}>Guardar Producto y Costeo</Text>
+              <TouchableOpacity
+                style={[styles.btnGuardar, guardando && { opacity: 0.7 }]}
+                onPress={handleGuardar}
+                disabled={guardando}
+              >
+                {guardando ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text style={styles.btnGuardarText}>Guardar Producto y Costeo</Text>
+                )}
               </TouchableOpacity>
             </View>
 
@@ -450,7 +485,14 @@ export default function CosteoScreen({ onNavigate }) {
       ) : (
         /* ── PESTAÑA: PRODUCTOS GUARDADOS ── */
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          {productosGuardados.length === 0 ? (
+          {cargandoCosteos ? (
+            <View style={{ paddingVertical: 40, alignItems: 'center' }}>
+              <ActivityIndicator size="large" color={PURPLE} />
+              <Text style={{ marginTop: 12, color: '#666', fontSize: 14 }}>
+                Cargando tus productos guardados...
+              </Text>
+            </View>
+          ) : productosGuardados.length === 0 ? (
             <View style={styles.emptyContainer}>
               <MaterialCommunityIcons name='package-variant' size={60} color='#ccc' />
               <Text style={styles.emptyTitle}>Sin productos costeados aún</Text>
@@ -478,7 +520,7 @@ export default function CosteoScreen({ onNavigate }) {
                   <View style={styles.priceBadge}>
                     <Text style={styles.priceBadgeLabel}>Venta</Text>
                     <Text style={styles.priceBadgeText}>
-                      ${prod.precioVenta.toFixed(2)}
+                      ${(prod.precioVenta || 0).toFixed(2)}
                     </Text>
                   </View>
                 </View>
@@ -487,7 +529,7 @@ export default function CosteoScreen({ onNavigate }) {
                   <View style={styles.metricItem}>
                     <Text style={styles.metricLabel}>Costo Prod.</Text>
                     <Text style={styles.metricValue}>
-                      ${prod.costoProduccion.toFixed(2)}
+                      ${(prod.costoProduccion || 0).toFixed(2)}
                     </Text>
                   </View>
 
@@ -495,7 +537,7 @@ export default function CosteoScreen({ onNavigate }) {
 
                   <View style={styles.metricItem}>
                     <Text style={styles.metricLabel}>Mano de obra</Text>
-                    <Text style={styles.metricValue}>{prod.horas} hrs</Text>
+                    <Text style={styles.metricValue}>{prod.horas || 0} hrs</Text>
                   </View>
 
                   <View style={styles.metricDivider} />
@@ -503,7 +545,7 @@ export default function CosteoScreen({ onNavigate }) {
                   <View style={styles.metricItem}>
                     <Text style={styles.metricLabel}>Ganancia</Text>
                     <Text style={styles.metricValueGreen}>
-                      +${prod.ganancia.toFixed(2)}
+                      +${(prod.ganancia || 0).toFixed(2)}
                     </Text>
                   </View>
                 </View>
