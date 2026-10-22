@@ -12,7 +12,7 @@ const GUIAS_EJEMPLO = [
   {
     id: '1',
     titulo: 'Guía Práctica de Economía Feminista',
-    descripcion: 'Materiales educativos sobre economía feminista creados por GESMujer para el empoderamiento económico de las mujeres.',
+    descripcion: 'Materiales educativos sobre economía feminista para el empoderamiento económico de las mujeres.',
     categoria: 'Economía Feminista',
     pdfUrl: 'https://drive.google.com/file/d/1vxv1QFNW3o44mGit2F11NcJhFkkLwiak/view?usp=sharing', 
   },
@@ -59,7 +59,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
           <MaterialCommunityIcons name='book-open-page-variant' size={48} color={PURPLE} />
           <Text style={styles.heroTitle}>Biblioteca de Guías y Recursos</Text>
           <Text style={styles.heroSubtitle}>
-            Materiales educativos en PDF sobre cooperativismo, costeo justo y autonomía económica creados por GESMujer.
+            Materiales educativos en PDF sobre cooperativismo, costeo justo y autonomía económica.
           </Text>
         </View>
 

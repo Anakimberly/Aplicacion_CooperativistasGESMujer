@@ -39,7 +39,7 @@ export default function InformacionScreen({ onNavigate }) {
         {/* ── Banner de Presentación de la App ── */}
         <View style={styles.heroCard}>
           <Image
-            source={require('../assets/logoges45.png')}
+            source={require('../assets/logoges.jpg')}
             style={styles.logoImage}
             resizeMode='contain'
           />
@@ -48,7 +48,7 @@ export default function InformacionScreen({ onNavigate }) {
           {/* apartado de la version */}
           <View style={styles.versionBadge}>
             <Image
-              source={require('../assets/logoges45.png')} 
+              source={require('../assets/logoges.jpg')} 
               style={styles.versionIcon}
               resizeMode='contain'
             />
