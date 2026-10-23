@@ -365,6 +365,13 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
                 <Text style={styles.sectionTitle}>3. Tiempo de Trabajo (Mano de obra)</Text>
               </View>
 
+              <View style={styles.helpBox}>
+                <Ionicons name='information-circle' size={18} color={PURPLE} style={{ marginTop: 1 }} />
+                <Text style={styles.helpText}>
+                  Te sugerimos $50 por hora si deseas un sueldo estimado de $8,000 al mes trabajando una jornada normal. Puedes cambiarlo según tu experiencia o la complejidad.
+                </Text>
+              </View>
+
               <View style={styles.rowTwoCols}>
                 <View style={styles.col}>
                   <Text style={styles.label}>Horas trabajadas</Text>
@@ -427,6 +434,63 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
                     placeholder='Ej: 30'
                     placeholderTextColor='#bbb'
                   />
+                </View>
+              </View>
+
+              {/* Botones canal de venta */}
+              <View style={styles.quickTagsContainer}>
+                <Text style={styles.quickTagsTitle}>Sugerencias por canal de venta (o escribe tu propio % arriba):</Text>
+                <View style={styles.tagsRow}>
+                  <TouchableOpacity
+                    style={[
+                      styles.tagChip,
+                      margenGanancia === '30' && styles.tagChipActive,
+                    ]}
+                    onPress={() => setMargenGanancia('30')}
+                  >
+                    <Text
+                      style={[
+                        styles.tagChipText,
+                        margenGanancia === '30' && styles.tagChipTextActive,
+                      ]}
+                    >
+                      Venta Directa (30%)
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[
+                      styles.tagChip,
+                      margenGanancia === '40' && styles.tagChipActive,
+                    ]}
+                    onPress={() => setMargenGanancia('40')}
+                  >
+                    <Text
+                      style={[
+                        styles.tagChipText,
+                        margenGanancia === '40' && styles.tagChipTextActive,
+                      ]}
+                    >
+                      Ferias/Bazares (40%)
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[
+                      styles.tagChip,
+                      margenGanancia === '50' && styles.tagChipActive,
+                    ]}
+                    onPress={() => setMargenGanancia('50')}
+                  >
+                    <Text
+                      style={[
+                        styles.tagChipText,
+                        margenGanancia === '50' && styles.tagChipTextActive,
+                      ]}
+                    >
+                      Tiendas/Boutique (50%)
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -707,6 +771,65 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   col: { flex: 1 },
+
+  // Cuadro de ayuda pedagógica
+  helpBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#f9f2fc',
+    borderLeftWidth: 3.5,
+    borderLeftColor: PURPLE,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 14,
+    gap: 8,
+  },
+  helpText: {
+    flex: 1,
+    fontSize: 12.5,
+    color: '#555',
+    lineHeight: 18,
+  },
+
+  // Etiquetas rápidas de ganancia
+  quickTagsContainer: {
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  quickTagsTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 8,
+  },
+  tagsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tagChip: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+  tagChipActive: {
+    backgroundColor: LIGHT_PURPLE,
+    borderColor: PURPLE,
+  },
+  tagChipText: {
+    fontSize: 12,
+    color: '#555',
+    fontWeight: '500',
+  },
+  tagChipTextActive: {
+    color: PURPLE,
+    fontWeight: '700',
+  },
 
   
   summaryCard: {
