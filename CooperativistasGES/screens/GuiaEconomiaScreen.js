@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, StatusBar,
+  View, Text, StyleSheet, StatusBar,
   ScrollView, TouchableOpacity, Alert, Linking,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
@@ -12,9 +13,9 @@ const GUIAS_EJEMPLO = [
   {
     id: '1',
     titulo: 'Guía Práctica de Economía Feminista',
-    descripcion: 'Materiales educativos sobre economía feminista para el empoderamiento económico de las mujeres.',
+    descripcion: 'Materiales educativos sobre economía feminista creados por GESMujer para el empoderamiento económico de las mujeres.',
     categoria: 'Economía Feminista',
-    pdfUrl: 'https://drive.google.com/file/d/1vxv1QFNW3o44mGit2F11NcJhFkkLwiak/view?usp=sharing', 
+    pdfUrl: 'https://drive.google.com/file/d/1vxv1QFNW3o44mGit2F11NcJhFkkLwiak/view?usp=sharing', // ← cambia este link por el de Google Drive de tu PDF
   },
  
 ];
@@ -24,7 +25,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
   const handleAbrirGuia = (guia) => {    
     Alert.alert( 
       `${guia.titulo}`,
-      `¿Deseas abrir la guía en formato PDF?\n\nTamaño: ${guia.tamano}`,                                            
+      `¿Deseas abrir la guía en formato PDF?\n\nFormato: Documento Digital`,                                            
       [
         { text: 'Cancelar', style: 'cancel' },
         {
@@ -40,7 +41,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
 
       {/* ── Cabecera ── */}
@@ -59,7 +60,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
           <MaterialCommunityIcons name='book-open-page-variant' size={48} color={PURPLE} />
           <Text style={styles.heroTitle}>Biblioteca de Guías y Recursos</Text>
           <Text style={styles.heroSubtitle}>
-            Materiales educativos en PDF sobre cooperativismo, costeo justo y autonomía económica.
+            Materiales educativos en PDF sobre cooperativismo, costeo justo y autonomía económica creados por GESMujer.
           </Text>
         </View>
 
@@ -103,7 +104,7 @@ export default function GuiaEconomiaScreen({ onNavigate }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1, backgroundColor: PURPLE },
 
   header: {
     backgroundColor: PURPLE,
@@ -111,14 +112,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: { padding: 4 },
   headerTitle: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 
-  scrollContent: { padding: 18, paddingBottom: 30 },
+  scrollContent: {
+    backgroundColor: '#F5F5F5',
+    padding: 18,
+    paddingBottom: 30,
+    flexGrow: 1,
+  },
 
-  // Hero Banner
+
   heroBanner: {
     backgroundColor: 'white',
     borderRadius: 20,

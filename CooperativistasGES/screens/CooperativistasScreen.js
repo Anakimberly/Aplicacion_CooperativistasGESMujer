@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, SafeAreaView, StatusBar,
+  StyleSheet, StatusBar,
   ScrollView, KeyboardAvoidingView, Platform, Alert, Modal, Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -57,14 +58,14 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleChange = (field, value) => {
-    // Si es teléfono, solo permitir números y máximo 10 dígitos
+    
     if (field === 'telefono') {
       const soloNumeros = value.replace(/[^0-9]/g, '').slice(0, 10);
       setForm((prev) => ({ ...prev, [field]: soloNumeros }));
       return;
     }
 
-    // Si es nombre o apellidos, no permitir números
+    
     if (field === 'nombre' || field === 'apellidoPaterno' || field === 'apellidoMaterno') {
       const sinNumeros = value.replace(/[0-9]/g, '');
       setForm((prev) => ({ ...prev, [field]: sinNumeros }));
@@ -74,7 +75,7 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Abrir galería para seleccionar foto
+  // seleccionar foto
   const handleSeleccionarFoto = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -128,14 +129,14 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
       return;
     }
 
-    // Validación de nombres y apellidos (sin números)
+    // Validación de nombres y apellidos 
     const regexNumeros = /[0-9]/;
     if (regexNumeros.test(nombre) || regexNumeros.test(apellidoPaterno) || regexNumeros.test(apellidoMaterno)) {
       Alert.alert('Datos no válidos', 'El nombre y apellidos no deben contener números.');
       return;
     }
 
-    // Validación de teléfono: exactamente 10 dígitos
+    // Validación de telefono
     const telefonoLimpio = telefono.replace(/[^0-9]/g, '');
     if (telefonoLimpio.length !== 10) {
       Alert.alert('Teléfono incorrecto', 'El número de teléfono debe tener exactamente 10 dígitos.');
@@ -194,7 +195,7 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
 
       {/* ── Cabecera ── */}
@@ -277,81 +278,78 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
             </View>
 
             <TouchableOpacity style={styles.btnGuardar} onPress={handleGuardar}>
-              <Text style={styles.btnGuardarText}>Guardar Datos</Text>
+              <Text style={styles.btnGuardarText}>Guardar</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* ── Modal de Selección de Cooperativa ── */}
-      <Modal
-        visible={modalVisible}
-        animationType='fade'
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer} onStartShouldSetResponder={() => true}>
+      {/* ── Modal de selección de Cooperativa ── */}
+      <Modal visible={modalVisible} transparent animationType='slide'>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Selecciona tu Cooperativa</Text>
-              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ padding: 4 }}>
-                <Ionicons name='close' size={24} color='#333' />
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Ionicons name='close' size={24} color='#666' />
               </TouchableOpacity>
             </View>
-
-            <ScrollView style={styles.modalList} showsVerticalScrollIndicator={true}>
-              {COOPERATIVAS.map((coop) => {
-                const isSelected = form.cooperativa === coop;
-                return (
-                  <TouchableOpacity
-                    key={coop}
-                    style={[styles.optionItem, isSelected && styles.optionItemSelected]}
-                    onPress={() => {
-                      handleChange('cooperativa', coop);
-                      setModalVisible(false);
-                    }}
-                    activeOpacity={0.7}
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {COOPERATIVAS.map((item) => (
+                <TouchableOpacity
+                  key={item}
+                  style={styles.cooperativaItem}
+                  onPress={() => {
+                    handleChange('cooperativa', item);
+                    setModalVisible(false);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.cooperativaText,
+                      form.cooperativa === item && styles.cooperativaTextSelected,
+                    ]}
                   >
-                    <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
-                      {coop}
-                    </Text>
-                    {isSelected && <Ionicons name='checkmark-circle' size={22} color={PURPLE} />}
-                  </TouchableOpacity>
-                );
-              })}
+                    {item}
+                  </Text>
+                  {form.cooperativa === item && (
+                    <Ionicons name='checkmark' size={20} color={PURPLE} />
+                  )}
+                </TouchableOpacity>
+              ))}
             </ScrollView>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1, backgroundColor: PURPLE },
 
-  // Header
   header: {
     backgroundColor: PURPLE,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: { padding: 4 },
   headerTitle: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 
   // Scroll
-  scrollContent: { padding: 20 },
+  scrollContent: {
+    backgroundColor: '#F5F5F5',
+    padding: 20,
+    flexGrow: 1,
+  },
 
   // Card
   card: {
-    backgroundColor: '#f3e5f5', // Moradito suave (igual que las categorías del inicio)
+    backgroundColor: '#f3e5f5', 
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
@@ -370,7 +368,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  
   photoPickerContainer: {
     alignItems: 'center',
     marginBottom: 22,
@@ -436,7 +433,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
-  
   dropdownTrigger: {
     borderWidth: 1,
     borderColor: '#d1c4e9',
@@ -480,52 +476,51 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    marginBottom: 10,
   },
   modalTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '700',
     color: PURPLE,
   },
-  modalList: {
-    marginTop: 4,
-  },
-  optionItem: {
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    borderRadius: 10,
+  cooperativaItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f5f5f5',
   },
-  optionItemSelected: {
-    backgroundColor: '#f3e8fb',
+  cooperativaText: {
+    fontSize: 15,
+    color: '#444',
   },
-  optionText: {
-    fontSize: 14.5,
-    color: '#333',
-    flex: 1,
-    paddingRight: 8,
-  },
-  optionTextSelected: {
-    fontWeight: '700',
+  cooperativaTextSelected: {
     color: PURPLE,
+    fontWeight: '700',
   },
 
-  // Botón guardar
+  // Botón Guardar
   btnGuardar: {
     backgroundColor: PURPLE,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
-  btnGuardarText: { color: 'white', fontSize: 16, fontWeight: '700' },
+  btnGuardarText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 });

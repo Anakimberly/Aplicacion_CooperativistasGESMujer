@@ -1,8 +1,9 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, StatusBar,
+  View, Text, StyleSheet, StatusBar,
   ScrollView, TouchableOpacity, Image, Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -114,7 +115,7 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
 
       {/* ── Cabecera ── */}
@@ -158,21 +159,25 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
           <Text style={styles.userName}>{nombreCompleto}</Text>
 
           <View style={styles.emailBadge}>
-            <Ionicons name='mail-outline' size={14} color={PURPLE} />
+            <Ionicons name='mail-outline' size={13} color={PURPLE} />
             <Text style={styles.emailText}>{correoMostrar}</Text>
           </View>
 
-          {tieneDatos && (
-            <View style={styles.statusPill}>
-              <Ionicons name='checkmark-circle' size={14} color={GREEN} />
-              <Text style={styles.statusText}>Cooperativista Registrada</Text>
-            </View>
-          )}
+          <View style={styles.statusBadge}>
+            <Ionicons
+              name={tieneDatos ? 'checkmark-circle' : 'alert-circle'}
+              size={14}
+              color={tieneDatos ? GREEN : '#e67e22'}
+            />
+            <Text style={[styles.statusText, { color: tieneDatos ? GREEN : '#e67e22' }]}>
+              {tieneDatos ? 'Cooperativista Registrada' : 'Registro Incompleto'}
+            </Text>
+          </View>
         </View>
 
-        {/* ── Detalle de Información ── */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}> Información de Cooperativa</Text>
+        {/* ── Información de la Cooperativa ── */}
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Información de Cooperativa</Text>
 
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
@@ -197,8 +202,8 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
           </View>
         </View>
 
-        {/* ── Detalle de Contacto ── */}
-        <View style={styles.sectionCard}>
+        {/* ── Datos de Contacto ── */}
+        <View style={styles.card}>
           <Text style={styles.sectionTitle}>Datos de Contacto</Text>
 
           <View style={styles.infoRow}>
@@ -251,7 +256,7 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1, backgroundColor: PURPLE },
 
   header: {
     backgroundColor: PURPLE,
@@ -259,13 +264,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: { padding: 4 },
   logoutBtn: { padding: 4 },
   headerTitle: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 
-  scrollContent: { padding: 18, paddingBottom: 30 },
+  scrollContent: {
+    backgroundColor: '#F5F5F5',
+    padding: 18,
+    paddingBottom: 30,
+    flexGrow: 1,
+  },
 
   // Tarjeta de Presentación
   profileHeaderCard: {
@@ -285,20 +296,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   avatarContainer: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: LIGHT_PURPLE,
+    borderWidth: 3,
+    borderColor: PURPLE,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: PURPLE,
   },
   avatarImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderWidth: 2,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    borderWidth: 3,
     borderColor: PURPLE,
   },
   cameraBadge: {
@@ -306,61 +317,63 @@ const styles = StyleSheet.create({
     bottom: 2,
     right: 2,
     backgroundColor: PURPLE,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
     borderColor: 'white',
   },
   changePhotoText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 12.5,
     color: PURPLE,
-    marginBottom: 8,
+    fontWeight: '600',
+    marginTop: 4,
   },
   userName: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#333',
+    color: '#222',
+    marginTop: 10,
     textAlign: 'center',
   },
   emailBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
     backgroundColor: LIGHT_PURPLE,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
     marginTop: 8,
   },
   emailText: {
-    fontSize: 13,
+    fontSize: 12.5,
     color: PURPLE,
     fontWeight: '600',
   },
-  statusPill: {
+  statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#e8f8f5',
-    paddingHorizontal: 10,
+    backgroundColor: '#f9f9f9',
+    paddingHorizontal: 12,
     paddingVertical: 5,
-    borderRadius: 10,
-    marginTop: 10,
+    borderRadius: 20,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '700',
-    color: GREEN,
+    fontWeight: '600',
   },
 
-  
-  sectionCard: {
+  // Tarjeta de Información General
+  card: {
     backgroundColor: 'white',
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 18,
     marginBottom: 14,
     elevation: 3,
@@ -381,17 +394,27 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   infoIconBox: {
-    width: 38,
-    height: 38,
+    width: 40,
+    height: 40,
     borderRadius: 10,
     backgroundColor: LIGHT_PURPLE,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  infoContent: { flex: 1 },
-  infoLabel: { fontSize: 12, color: '#888', fontWeight: '500' },
-  infoValue: { fontSize: 14.5, color: '#333', fontWeight: '700', marginTop: 1 },
-
+  infoContent: {
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: 11.5,
+    color: '#888',
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
   divider: {
     height: 1,
     backgroundColor: '#f0f0f0',
@@ -401,27 +424,39 @@ const styles = StyleSheet.create({
   // Botones
   btnEditar: {
     backgroundColor: PURPLE,
-    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 14,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 6,
-  },
-  btnEditarText: { color: 'white', fontSize: 15, fontWeight: '700' },
-
-  btnCerrarSesion: {
-    backgroundColor: '#fdf2f2',
-    borderWidth: 1,
-    borderColor: '#f5c6cb',
     borderRadius: 12,
-    paddingVertical: 13,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
     gap: 8,
-    marginTop: 10,
+    marginBottom: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
-  btnCerrarSesionText: { color: '#e74c3c', fontSize: 15, fontWeight: '700' },
+  btnEditarText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  btnCerrarSesion: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: '#fadbd8',
+    marginBottom: 20,
+  },
+  btnCerrarSesionText: {
+    color: '#e74c3c',
+    fontSize: 15,
+    fontWeight: '700',
+  },
 });

@@ -1,8 +1,9 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, StatusBar,
+  View, Text, StyleSheet, StatusBar,
   ScrollView, TouchableOpacity, Image, Linking, Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
@@ -22,7 +23,7 @@ export default function InformacionScreen({ onNavigate }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
 
       {/* ── Cabecera ── */}
@@ -156,7 +157,7 @@ export default function InformacionScreen({ onNavigate }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1, backgroundColor: PURPLE },
 
   header: {
     backgroundColor: PURPLE,
@@ -164,14 +165,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: { padding: 4 },
   headerTitle: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 
-  scrollContent: { padding: 18, paddingBottom: 30 },
+  scrollContent: {
+    backgroundColor: '#F5F5F5',
+    padding: 18,
+    paddingBottom: 30,
+    flexGrow: 1,
+  },
 
-  
   heroCard: {
     backgroundColor: 'white',
     borderRadius: 20,

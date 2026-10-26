@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
 
 export default function BottomNav({ currentScreen, onNavigate }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.bottomNav}>
+    <View style={[styles.bottomNav, { paddingBottom: Math.max(insets.bottom, 12) }]}>
       <TouchableOpacity
         style={styles.navItem}
         onPress={() => onNavigate && onNavigate('Home')}
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: PURPLE,
-    paddingVertical: 14,
+    paddingTop: 12,
     justifyContent: 'space-around',
     alignItems: 'center',
     elevation: 8,

@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
   View, Text, Image, ScrollView, TouchableOpacity,
-  StyleSheet, SafeAreaView, StatusBar, Dimensions,
+  StyleSheet, StatusBar, useWindowDimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
-const { width } = Dimensions.get('window');
 
 const slides = [
   { id: '4', image: require('../assets/carrusel4.jpg') },
@@ -23,8 +23,13 @@ const categories = [
 ];
 
 export default function HomeScreen({ onNavigate }) {
+  const { width, height } = useWindowDimensions();
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef(null);
+
+  const carouselItemWidth = width - 32;
+  const isSmallScreen = height < 700;
+  const carouselHeight = isSmallScreen ? 150 : Math.min(220, height * 0.26);
 
   // movimiento de carrusel automatico cada 3.5 segundos
   useEffect(() => {
@@ -33,7 +38,7 @@ export default function HomeScreen({ onNavigate }) {
         const nextIndex = (prevIndex + 1) % slides.length;
         if (scrollRef.current) {
           scrollRef.current.scrollTo({
-            x: nextIndex * (width - 32),
+            x: nextIndex * carouselItemWidth,
             animated: true,
           });
         }
@@ -42,10 +47,10 @@ export default function HomeScreen({ onNavigate }) {
     }, 3500);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [carouselItemWidth]);
 
   const handleScroll = (e) => {
-    const index = Math.round(e.nativeEvent.contentOffset.x / (width - 32));
+    const index = Math.round(e.nativeEvent.contentOffset.x / carouselItemWidth);
     if (index >= 0 && index < slides.length) {
       setActiveSlide(index);
     }
@@ -55,96 +60,105 @@ export default function HomeScreen({ onNavigate }) {
     if (screen) onNavigate(screen);
   };
 
+  const cardWidth = (width - 46) / 2;
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='dark-content' backgroundColor='white' />
 
-      {/* ── Carrusel ── */}
-      <View style={styles.carouselWrapper}>
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          snapToInterval={width - 32}
-          decelerationRate='fast'
-        >
-          {slides.map((slide) => (
-            <View key={slide.id} style={styles.slide}>
-              <Image source={slide.image} style={styles.slideImage} resizeMode='cover' />
-            </View>
-          ))}
-        </ScrollView>
-        <View style={styles.dots}>
-          {slides.map((_, i) => (
-            <View key={i} style={[styles.dot, i === activeSlide && styles.dotActive]} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* ── Carrusel ── */}
+        <View style={styles.carouselWrapper}>
+          <ScrollView
+            ref={scrollRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            snapToInterval={carouselItemWidth}
+            decelerationRate='fast'
+          >
+            {slides.map((slide) => (
+              <View key={slide.id} style={[styles.slide, { width: carouselItemWidth }]}>
+                <Image
+                  source={slide.image}
+                  style={[styles.slideImage, { height: carouselHeight }]}
+                  resizeMode='cover'
+                />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={styles.dots}>
+            {slides.map((_, i) => (
+              <View key={i} style={[styles.dot, i === activeSlide && styles.dotActive]} />
+            ))}
+          </View>
+        </View>
+
+        {/* ── categorías ── */}
+        <View style={styles.grid}>
+          {categories.map((cat) => (
+            <TouchableOpacity
+              key={cat.id}
+              style={[styles.card, { width: cardWidth }]}
+              onPress={() => handleCardPress(cat.screen)}
+              activeOpacity={cat.screen ? 0.7 : 1}
+            >
+              <MaterialCommunityIcons name={cat.icon} size={48} color={PURPLE} />
+              <Text style={styles.cardLabel}>{cat.name}</Text>
+            </TouchableOpacity>
           ))}
         </View>
-      </View>
-
-      {/* ── categorías ── */}
-      <View style={styles.grid}>
-        {categories.map((cat) => (
-          <TouchableOpacity
-            key={cat.id}
-            style={styles.card}
-            onPress={() => handleCardPress(cat.screen)}
-            activeOpacity={cat.screen ? 0.7 : 1}
-          >
-            <MaterialCommunityIcons name={cat.icon} size={52} color={PURPLE} />
-            <Text style={styles.cardLabel}>{cat.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
-//carrusel (tamaño de la pantalla )
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
+  scrollContent: {
+    paddingBottom: 24,
+  },
 
   // ESTILOS DEL CARRUSEL
-  //CONTENEDOR DEL CARRUSEL:
   carouselWrapper: {
     marginHorizontal: 16,
-    marginTop: 30,
+    marginTop: 12,
     marginBottom: 16,
     overflow: 'hidden',
   },
 
-  //cada tarjetita del carrusel
   slide: {
-    width: width - 32,
     paddingRight: 16,
   },
 
   slideImage: {
     width: '100%',
-    height: 160,
     borderRadius: 16,
-    borderWidth: 3,       // grosor del borde del carrusel 
-    borderColor: PURPLE},  // color del borde del carrusel 
+    borderWidth: 3,
+    borderColor: PURPLE,
+  },
 
   dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#ccc', marginHorizontal: 4 },
   dotActive: { backgroundColor: PURPLE },
+
   grid: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 16,
-    paddingTop: 16,
     gap: 14,
     alignContent: 'flex-start',
   },
-  //card de las categorias
+
   card: {
-    width: (width - 46) / 2,
     backgroundColor: '#f3e5f5', 
-    paddingVertical: 26,
+    borderRadius: 16,
+    paddingVertical: 24,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,
@@ -153,7 +167,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
   },
-  //label de las categorias
+
   cardLabel: {
     marginTop: 8,
     fontSize: 14,
@@ -161,13 +175,4 @@ const styles = StyleSheet.create({
     color: PURPLE, 
     textAlign: 'center',
   },
-  //boton del navbar  
-  bottomNav: {
-    flexDirection: 'row',
-    backgroundColor: PURPLE,
-    paddingVertical: 14,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  navItem: { padding: 6 },
 });

@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   Animated,
   Dimensions,
   Modal,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PURPLE = '#5b1378';
@@ -56,7 +56,7 @@ function FlipCard({ item, onOpenModal }) {
       }).start();
       setIsFlipped(false);
     } else {
-      // tiempo de la imagen para que se vea antes de abrir el modal
+      // Abre la imagen al instante sin retrasos
       if (onOpenModal) {
         onOpenModal(item);
       }
@@ -120,7 +120,7 @@ function FlipCard({ item, onOpenModal }) {
         </View>
       </Animated.View>
 
-      {/* ── Cara trasera parte chiquita de la imagen ── */}
+      {/* ── Cara trasera: miniatura (toca para ampliar o voltear) ── */}
       <Animated.View style={[styles.card, styles.backCard, backAnimatedStyle]}>
         <Image source={item.imagen} style={styles.backImage} resizeMode='contain' />
         <Text style={styles.backHintText}>Toca para voltear</Text>
@@ -133,7 +133,7 @@ export default function GESMujerScreen({ onNavigate }) {
   const [modalItem, setModalItem] = useState(null);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor={PURPLE} />
 
       {/* ── cabecera ── */}
@@ -141,7 +141,7 @@ export default function GESMujerScreen({ onNavigate }) {
         <TouchableOpacity onPress={() => onNavigate('Home')} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Fuerza Cooperativa</Text>
+        <Text style={styles.headerTitle}>GES Mujer</Text>
         <View style={{ width: 36 }} />
       </View>
 
@@ -209,7 +209,7 @@ export default function GESMujerScreen({ onNavigate }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: PURPLE,
   },
 
   // cabecera
@@ -219,7 +219,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: {
     padding: 4,
@@ -251,9 +252,11 @@ const styles = StyleSheet.create({
 
   // Contenido y Grid 2x2
   scrollContent: {
+    backgroundColor: '#F5F5F5',
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 24,
+    flexGrow: 1,
   },
   grid: {
     flexDirection: 'row',
@@ -362,10 +365,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
-  // Modal de imagen en grande
+  // ── Estilos del Modal 
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.82)', // Fondo desvanecido oscuro
+    backgroundColor: 'rgba(0, 0, 0, 0.82)', 
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,

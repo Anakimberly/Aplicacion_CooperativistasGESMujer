@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, SafeAreaView, StatusBar,
+  StyleSheet, StatusBar,
   ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { db } from '../firebaseConfig';
@@ -64,7 +65,7 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
           id: docSnap.id,
           ...docSnap.data(),
         }));
-        // Ordenar del más reciente al más antiguo
+       
         lista.sort((a, b) => {
           const tA = a.fechaCreacion?.seconds || 0;
           const tB = b.fechaCreacion?.seconds || 0;
@@ -168,7 +169,7 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
           {
             text: 'Ver Lista de Productos',
             onPress: () => {
-              // Limpiar formulario y cambiar a pestaña de guardados
+            
               setNombreProducto('');
               setCategoria('');
               setMateriales([{ id: '1', nombre: '', costo: '' }]);
@@ -225,10 +226,9 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle='light-content' backgroundColor={PURPLE} />
 
-      
       <View style={styles.header}>
         <TouchableOpacity onPress={() => onNavigate('Home')} style={styles.backBtn}>
           <Ionicons name='arrow-back' size={24} color='white' />
@@ -237,7 +237,6 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
         <View style={{ width: 36 }} />
       </View>
 
-     
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tabButton, activeTab === 'formulario' && styles.tabButtonActive]}
@@ -289,18 +288,18 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
                   style={styles.input}
                   value={nombreProducto}
                   onChangeText={setNombreProducto}
-                  placeholder='Ej: Blusa bordada tradicional'
+                  placeholder='Ej: Huipil bordado de San Antonino'
                   placeholderTextColor='#bbb'
                 />
               </View>
 
               <View style={styles.fieldGroup}>
-                <Text style={styles.label}>Categoría / Tipo</Text>
+                <Text style={styles.label}>Categoría</Text>
                 <TextInput
                   style={styles.input}
                   value={categoria}
                   onChangeText={setCategoria}
-                  placeholder='Ej: Textil, Alimentos, Alfarería...'
+                  placeholder='Ej: Textil, Alimentos, Cerámica, Joyería...'
                   placeholderTextColor='#bbb'
                 />
               </View>
@@ -437,7 +436,7 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
                 </View>
               </View>
 
-              {/* Botones canal de venta */}
+              {/* Botones sugeridos por canal de venta */}
               <View style={styles.quickTagsContainer}>
                 <Text style={styles.quickTagsTitle}>Sugerencias por canal de venta (o escribe tu propio % arriba):</Text>
                 <View style={styles.tagsRow}>
@@ -560,22 +559,25 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
             <View style={styles.emptyContainer}>
               <MaterialCommunityIcons name='package-variant' size={60} color='#ccc' />
               <Text style={styles.emptyTitle}>Sin productos costeados aún</Text>
-              <Text style={styles.emptySub}>
-                Ingresa a la pestaña "Nuevo Costeo" para calcular el precio de tus productos.
+              <Text style={styles.emptySubtitle}>
+                Usa la pestaña "Nuevo Costeo" para calcular el precio justo de tus productos.
               </Text>
               <TouchableOpacity
-                style={styles.btnIrForm}
+                style={styles.btnNuevoDesdeEmpty}
                 onPress={() => setActiveTab('formulario')}
               >
-                <Text style={styles.btnIrFormText}>+ Crear primer costeo</Text>
+                <Ionicons name='add-circle-outline' size={18} color='white' />
+                <Text style={styles.btnNuevoText}>Crear Primer Costeo</Text>
               </TouchableOpacity>
             </View>
           ) : (
             productosGuardados.map((prod) => (
               <View key={prod.id} style={styles.prodCard}>
-                <View style={styles.prodCardHeader}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.prodNombre}>{prod.nombre}</Text>
+                <View style={styles.prodHeader}>
+                  <View style={{ flex: 1, marginRight: 8 }}>
+                    <Text style={styles.prodNombre} numberOfLines={1}>
+                      {prod.nombre}
+                    </Text>
                     <Text style={styles.prodMeta}>
                       {prod.categoria} • {prod.fecha}
                     </Text>
@@ -641,7 +643,7 @@ export default function CosteoScreen({ onNavigate, userEmail }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1, backgroundColor: PURPLE },
 
   header: {
     backgroundColor: PURPLE,
@@ -649,7 +651,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
   backBtn: { padding: 4 },
   headerTitle: { color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -676,26 +679,24 @@ const styles = StyleSheet.create({
   },
   tabButtonActive: {
     backgroundColor: LIGHT_PURPLE,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: PURPLE,
   },
-  tabText: {
-    fontSize: 13.5,
-    fontWeight: '600',
-    color: '#666',
-  },
-  tabTextActive: {
-    color: PURPLE,
-    fontWeight: '700',
-  },
+  tabText: { fontSize: 13, fontWeight: '600', color: '#666' },
+  tabTextActive: { color: PURPLE, fontWeight: '700' },
 
-  scrollContent: { padding: 16, paddingBottom: 30 },
+  scrollContent: {
+    backgroundColor: '#F5F5F5',
+    padding: 16,
+    paddingBottom: 30,
+    flexGrow: 1,
+  },
 
   card: {
     backgroundColor: 'white',
     borderRadius: 16,
     padding: 18,
-    marginBottom: 16,
+    marginBottom: 14,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -705,26 +706,24 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
     gap: 8,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+    paddingBottom: 10,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: PURPLE,
-  },
+  sectionTitle: { fontSize: 15, fontWeight: '700', color: PURPLE },
 
-  fieldGroup: { marginBottom: 12 },
-  label: { fontSize: 13, fontWeight: '600', color: '#555', marginBottom: 5 },
-  subLabel: { fontSize: 12, color: '#777', marginBottom: 4 },
-
+  fieldGroup: { marginBottom: 14 },
+  label: { fontSize: 13, fontWeight: '600', color: '#555', marginBottom: 6 },
+  subLabel: { fontSize: 11, fontWeight: '500', color: '#888', marginBottom: 4 },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 10,
     paddingHorizontal: 12,
-    paddingVertical: 9,
-    fontSize: 14.5,
+    paddingVertical: 10,
+    fontSize: 14,
     color: '#333',
     backgroundColor: '#FAFAFA',
   },
@@ -735,9 +734,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   btnEliminar: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingBottom: 10,
+    paddingHorizontal: 4,
   },
   btnAgregar: {
     flexDirection: 'row',
@@ -772,7 +770,7 @@ const styles = StyleSheet.create({
   },
   col: { flex: 1 },
 
-  // Cuadro de ayuda pedagógica
+  // Caja de ayuda
   helpBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -791,7 +789,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
-  // Etiquetas rápidas de ganancia
+  // Etiquetas de ganancia rápida
   quickTagsContainer: {
     marginTop: 12,
     paddingTop: 10,
@@ -831,7 +829,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  
   summaryCard: {
     backgroundColor: 'white',
     borderRadius: 18,
@@ -861,194 +858,144 @@ const styles = StyleSheet.create({
   summaryLabelBold: { fontSize: 14.5, fontWeight: '700', color: '#333' },
   summaryValBold: { fontSize: 14.5, fontWeight: '700', color: PURPLE },
 
-  divider: {
-    height: 1,
-    backgroundColor: '#eee',
-    marginVertical: 10,
-  },
+  divider: { height: 1, backgroundColor: '#eee', marginVertical: 10 },
 
   priceBanner: {
     backgroundColor: LIGHT_GREEN,
+    borderRadius: 14,
+    padding: 16,
+    alignItems: 'center',
+    marginVertical: 14,
     borderWidth: 1.5,
     borderColor: GREEN,
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    marginTop: 14,
-    marginBottom: 16,
   },
   priceBannerTitle: {
     fontSize: 12,
     fontWeight: '700',
     color: GREEN,
     letterSpacing: 0.5,
+    marginBottom: 4,
   },
   priceBannerAmount: {
     fontSize: 28,
     fontWeight: '800',
     color: GREEN,
-    marginTop: 2,
   },
 
   btnGuardar: {
     backgroundColor: PURPLE,
     borderRadius: 12,
-    paddingVertical: 14,
+    paddingVertical: 15,
     alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
-  btnGuardarText: { color: 'white', fontSize: 16, fontWeight: '700' },
+  btnGuardarText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 
-  // Tarjetas de productos guardados
+  // Lista Guardados
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 20,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#444',
+    marginTop: 16,
+    marginBottom: 6,
+  },
+  emptySubtitle: {
+    fontSize: 13,
+    color: '#888',
+    textAlign: 'center',
+    lineHeight: 18,
+    marginBottom: 20,
+  },
+  btnNuevoDesdeEmpty: {
+    backgroundColor: PURPLE,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+  },
+  btnNuevoText: { color: 'white', fontWeight: '700', fontSize: 14 },
+
   prodCard: {
     backgroundColor: 'white',
     borderRadius: 16,
     padding: 16,
-    marginBottom: 14,
+    marginBottom: 12,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
-    borderLeftWidth: 4,
-    borderLeftColor: PURPLE,
   },
-  prodCardHeader: {
+  prodHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 12,
   },
-  prodNombre: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#333',
-  },
-  prodMeta: {
-    fontSize: 12,
-    color: '#888',
-    marginTop: 2,
-  },
-
+  prodNombre: { fontSize: 16, fontWeight: '700', color: '#222', marginBottom: 2 },
+  prodMeta: { fontSize: 12, color: '#888' },
   priceBadge: {
     backgroundColor: LIGHT_GREEN,
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: GREEN,
   },
-  priceBadgeLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: GREEN,
-    textTransform: 'uppercase',
-  },
-  priceBadgeText: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: GREEN,
-  },
+  priceBadgeLabel: { fontSize: 9, fontWeight: '700', color: GREEN },
+  priceBadgeText: { fontSize: 14, fontWeight: '700', color: GREEN },
 
   prodMetrics: {
     flexDirection: 'row',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#F9F9F9',
     borderRadius: 10,
     paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
     justifyContent: 'space-around',
-    alignItems: 'center',
     marginBottom: 12,
   },
-  metricItem: {
-    alignItems: 'center',
-  },
-  metricLabel: {
-    fontSize: 11,
-    color: '#777',
-    marginBottom: 2,
-  },
-  metricValue: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#333',
-  },
-  metricValueGreen: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: GREEN,
-  },
-  metricDivider: {
-    width: 1,
-    height: 20,
-    backgroundColor: '#ddd',
-  },
+  metricItem: { alignItems: 'center' },
+  metricLabel: { fontSize: 11, color: '#888', marginBottom: 2 },
+  metricValue: { fontSize: 13, fontWeight: '700', color: '#333' },
+  metricValueGreen: { fontSize: 13, fontWeight: '700', color: GREEN },
+  metricDivider: { width: 1, backgroundColor: '#e0e0e0', height: '80%', alignSelf: 'center' },
 
   prodActions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
+    justifyContent: 'flex-end',
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    paddingTop: 10,
   },
   btnDetalle: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: LIGHT_PURPLE,
-    paddingVertical: 9,
-    borderRadius: 8,
-    gap: 6,
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
-  btnDetalleText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: PURPLE,
-  },
+  btnDetalleText: { fontSize: 13, fontWeight: '600', color: PURPLE },
   btnBorrarProd: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fdf2f2',
-    paddingVertical: 9,
-    paddingHorizontal: 14,
-    borderRadius: 8,
     gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
-  btnBorrarProdText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#e74c3c',
-  },
-
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-  },
-  emptyTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#555',
-    marginTop: 12,
-  },
-  emptySub: {
-    fontSize: 13.5,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 6,
-    marginBottom: 20,
-  },
-  btnIrForm: {
-    backgroundColor: PURPLE,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  btnIrFormText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 14,
-  },
+  btnBorrarProdText: { fontSize: 13, fontWeight: '600', color: '#e74c3c' },
 });

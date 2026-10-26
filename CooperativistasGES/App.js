@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import LoginScreen           from './screens/LoginScreen';
 import HomeScreen            from './screens/HomeScreen';
 import CooperativistasScreen from './screens/CooperativistasScreen';
@@ -54,7 +55,11 @@ export default function App() {
   };
 
   if (currentScreen === 'Login') {
-    return <LoginScreen onNavigate={handleNavigate} onSaveProfile={handleSaveProfile} />;
+    return (
+      <SafeAreaProvider>
+        <LoginScreen onNavigate={handleNavigate} onSaveProfile={handleSaveProfile} />
+      </SafeAreaProvider>
+    );
   }
 
   const renderScreen = () => {
@@ -96,12 +101,14 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.screenContainer}>
-        {renderScreen()}
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <View style={styles.screenContainer}>
+          {renderScreen()}
+        </View>
+        <BottomNav currentScreen={currentScreen} onNavigate={handleNavigate} />
       </View>
-      <BottomNav currentScreen={currentScreen} onNavigate={handleNavigate} />
-    </View>
+    </SafeAreaProvider>
   );
 }
 
