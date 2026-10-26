@@ -138,8 +138,19 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
       return;
     }
 
-    if (passToUse.length < 6) {
-      Alert.alert('Contraseña corta', 'La contraseña debe tener al menos 6 caracteres.');
+    // Validación de longitud mínima de contraseña (8 caracteres)
+    if (passToUse.length < 8) {
+      Alert.alert('Contraseña corta', 'La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    // Validación de al menos un número o carácter especial
+    const tieneNumeroOCaracter = /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(passToUse);
+    if (!tieneNumeroOCaracter) {
+      Alert.alert(
+        'Contraseña poco segura',
+        'La contraseña debe incluir al menos un número o carácter especial (por ejemplo: 1, 2, 3 o @, #, $, !).'
+      );
       return;
     }
 
@@ -305,7 +316,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                     value={contrasenaRegistro}
                     onChangeText={setContrasenaRegistro}
                     secureTextEntry={!verPasswordReg}
-                    placeholder='Ingrese la contraseña'
+                    placeholder='Contraseña (mín. 8 caracteres y número/símbolo)'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                   <TouchableOpacity

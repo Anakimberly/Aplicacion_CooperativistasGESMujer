@@ -11,7 +11,7 @@ import { db, auth } from '../firebaseConfig';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const PURPLE = '#5b1378';
-const LIGHT_PURPLE = '#f3e8fb';
+const LIGHT_PURPLE = '#e1bee7';
 
 const COOPERATIVAS = [
   'Mujeres Bordando Sueños',
@@ -57,6 +57,20 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleChange = (field, value) => {
+    // Si es teléfono, solo permitir números y máximo 10 dígitos
+    if (field === 'telefono') {
+      const soloNumeros = value.replace(/[^0-9]/g, '').slice(0, 10);
+      setForm((prev) => ({ ...prev, [field]: soloNumeros }));
+      return;
+    }
+
+    // Si es nombre o apellidos, no permitir números
+    if (field === 'nombre' || field === 'apellidoPaterno' || field === 'apellidoMaterno') {
+      const sinNumeros = value.replace(/[0-9]/g, '');
+      setForm((prev) => ({ ...prev, [field]: sinNumeros }));
+      return;
+    }
+
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -109,8 +123,22 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
 
   const handleGuardar = async () => {
     const { nombre, apellidoPaterno, apellidoMaterno, comunidad, telefono, cooperativa, fotoUri } = form;
-    if (!nombre || !apellidoPaterno || !apellidoMaterno || !comunidad || !telefono || !cooperativa) {
+    if (!nombre.trim() || !apellidoPaterno.trim() || !apellidoMaterno.trim() || !comunidad.trim() || !telefono.trim() || !cooperativa) {
       Alert.alert('Campos incompletos', 'Por favor llena todos los campos, incluyendo la cooperativa.');
+      return;
+    }
+
+    // Validación de nombres y apellidos (sin números)
+    const regexNumeros = /[0-9]/;
+    if (regexNumeros.test(nombre) || regexNumeros.test(apellidoPaterno) || regexNumeros.test(apellidoMaterno)) {
+      Alert.alert('Datos no válidos', 'El nombre y apellidos no deben contener números.');
+      return;
+    }
+
+    // Validación de teléfono: exactamente 10 dígitos
+    const telefonoLimpio = telefono.replace(/[^0-9]/g, '');
+    if (telefonoLimpio.length !== 10) {
+      Alert.alert('Teléfono incorrecto', 'El número de teléfono debe tener exactamente 10 dígitos.');
       return;
     }
 
@@ -219,8 +247,9 @@ export default function CooperativistasScreen({ onNavigate, userEmail, profileDa
                   value={form[field]}
                   onChangeText={(val) => handleChange(field, val)}
                   keyboardType={keyboardType}
+                  maxLength={field === 'telefono' ? 10 : undefined}
                   autoCapitalize={keyboardType === 'phone-pad' ? 'none' : 'words'}
-                  placeholder={`Ingresa tu ${label.toLowerCase()}`}
+                  placeholder={field === 'telefono' ? 'Ej: 9511234567 (10 dígitos)' : `Ingresa tu ${label.toLowerCase()}`}
                   placeholderTextColor='#bbb'
                 />
               </View>
@@ -322,9 +351,11 @@ const styles = StyleSheet.create({
 
   // Card
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#f3e5f5', // Moradito suave (igual que las categorías del inicio)
     borderRadius: 16,
     padding: 24,
+    borderWidth: 1,
+    borderColor: '#e1bee7',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -339,7 +370,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Photo Picker
+  
   photoPickerContainer: {
     alignItems: 'center',
     marginBottom: 22,
@@ -396,23 +427,23 @@ const styles = StyleSheet.create({
   label: { fontSize: 13, fontWeight: '600', color: '#555', marginBottom: 6 },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#d1c4e9',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 11,
     fontSize: 15,
     color: '#333',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#ffffff',
   },
 
-  // Dropdown trigger
+  
   dropdownTrigger: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#d1c4e9',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
