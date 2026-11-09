@@ -20,6 +20,8 @@ const categories = [
   { id: '2', name: 'Costeo',          icon: 'cash-multiple',           screen: 'Costeo' },
   { id: '3', name: 'Guía de\nEconomía', icon: 'book-open-outline',    screen: 'GuiaEconomia' },
   { id: '4', name: 'GESMujer',        icon: 'gender-female',           screen: 'GESMujer' },
+  { id: '5', name: 'Yo Aprendo',      icon: 'school-outline',          screen: 'YoAprendo' },
+  { id: '6', name: 'Playlist',        icon: 'playlist-music-outline',  screen: 'Playlist' },
 ];
 
 export default function HomeScreen({ onNavigate }) {

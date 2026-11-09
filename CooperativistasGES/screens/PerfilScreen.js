@@ -206,7 +206,7 @@ export default function PerfilScreen({ onNavigate, userEmail, profileData, onSav
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Datos de Contacto</Text>
 
-          <View style={styles.infoRow}>
+          <View style={styles.infoRow}>                     
             <View style={styles.infoIconBox}>
               <Ionicons name='call-outline' size={20} color={PURPLE} />
             </View>
