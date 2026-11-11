@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import {
   View, Text, StyleSheet, StatusBar,
   ScrollView, TouchableOpacity, Modal, useWindowDimensions,
-  Alert, Share,
+  Alert, Share, Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -382,7 +382,7 @@ const COSTEO_PRECIO_MODULO = {
       tag: 'Herramienta Práctica',
       titulo: 'Plantilla de Ayuda en Excel',
       icono: 'file-excel-box',
-      contenido: 'Para que no tengas que hacer fórmulas a mano, se prepara un formato automatizado en Excel. Solo escribes tus materiales y horas, y la plantilla calcula el costo y precio sugerido.',
+     
       datoTitulo: 'Descarga de Ayuda',
       datoClave: 'Presiona el botón verde de abajo para descargar la plantilla de apoyo.',
       tieneBotonExcel: true,
@@ -560,9 +560,7 @@ const EJEMPLOS_ETIQUETAS = [
   },
 ];
 
-/**
- * 4. Rutas de Venta y Canales
- */
+
 const RUTAS_VENTA = [
   {
     id: 'whatsapp',
@@ -605,9 +603,7 @@ const RUTAS_VENTA = [
   },
 ];
 
-/**
- * Sub-Módulo 4: Guía y Banco de Prompts de Inteligencia Artificial (IA)
- */
+
 const PROMPTS_IA = [
   {
     id: 'p1',
@@ -725,12 +721,36 @@ export default function YoAprendoScreen({ onNavigate }) {
     }
   };
 
-  // Descarga de Excel de costeo
   const handleDescargarExcel = () => {
+    const downloadUrl = 'https://docs.google.com/spreadsheets/d/18_TCNglMSHMsKskSbJmBKRlvTDsrq6Xs/export?format=xlsx';
+    const viewUrl = 'https://docs.google.com/spreadsheets/d/18_TCNglMSHMsKskSbJmBKRlvTDsrq6Xs/edit?usp=sharing';
+
     Alert.alert(
-      ' Plantilla de Costeo en Excel',
-      'Esta plantilla automatizada te ayudará a calcular los costos de materiales, el valor de tus horas de producción y tu precio justo.\n\n(Pronto estará disponible el archivo oficial de descarga proporcionado por GESMujer).',
-      [{ text: 'Entendido', style: 'default' }]
+      'Plantilla de Costeo y Precio Justo',
+      '¿Cómo deseas acceder a la plantilla?',
+      [
+        {
+          text: 'Descargar archivo (.xlsx)',
+          onPress: async () => {
+            try {
+              await Linking.openURL(downloadUrl);
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo iniciar la descarga. Intenta abrirla en Google Drive.');
+            }
+          },
+        },
+        {
+          text: 'Abrir en Google Drive',
+          onPress: async () => {
+            try {
+              await Linking.openURL(viewUrl);
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo abrir el enlace.');
+            }
+          },
+        },
+        { text: 'Cancelar', style: 'cancel' },
+      ]
     );
   };
 
