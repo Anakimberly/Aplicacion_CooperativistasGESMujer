@@ -10,10 +10,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 const PURPLE = '#5b1378';
 const LIGHT_PURPLE = '#f3e8fb';
 
-/**
- * Módulos extraídos directamente de la "Guía práctica | ABC de la Economía de las mujeres"
- * Red de Mujeres Cooperativistas por una Cultura de Paz - GESMujer Oaxaca.
- */
+
 const MODULOS_APRENDO = [
   {
     id: '1',
@@ -202,7 +199,7 @@ const MODULOS_APRENDO = [
         tag: 'Estrategia',
         titulo: 'El Semáforo de Aliadas',
         icono: 'traffic-light-outline',
-        contenido: 'Identificamos colectivas y personas con un semáforo de colores: 🟢 Confiables y fraternas, 🟡 En observación, y 🔴 No recomendables por imponer condiciones abusivas o desvalorizar el trabajo.',
+        contenido: 'Identificamos colectivas y personas con un semáforo de colores:  Confiables y fraternas,  En observación, y  No recomendables por imponer condiciones abusivas o desvalorizar el trabajo.',
         datoTitulo: 'Tip Práctico',
         datoClave: 'Preguntarse siempre: ¿compartimos valores?, ¿nos tratan con respeto?, ¿podemos colaborar en igualdad y sin jerarquías?',
       },
@@ -237,7 +234,7 @@ const MODULOS_APRENDO = [
         tag: 'Metodología',
         titulo: 'Línea del Tiempo Emocional',
         icono: 'timeline-clock-outline',
-        contenido: 'Trazamos una línea horizontal con 3 colores: 🟢 Momentos alegres o de logro, 🔴 Momentos difíciles, y 🔵 Momentos de cambio. Dibujamos cómo éramos antes, cómo somos hoy y qué soñamos para el futuro.',
+        contenido: 'Trazamos una línea horizontal con 3 colores: Momentos alegres o de logro,  Momentos difíciles, y  Momentos de cambio. Dibujamos cómo éramos antes, cómo somos hoy y qué soñamos para el futuro.',
         datoTitulo: 'Preguntas Espejo',
         datoClave: '¿Qué descubrí de mí misma hoy? ¿Qué me sorprendió del grupo? ¿Qué cambiaríamos si volviéramos a empezar?',
       },
@@ -393,11 +390,8 @@ const COSTEO_PRECIO_MODULO = {
   ],
 };
 
-/**
- * ══════════════════════════════════════════════════════════════════
- * SUB-MÓDULO 3: MARKETING INTERACTIVO
- * ══════════════════════════════════════════════════════════════════
- */
+
+ 
 const TABS_MARKETING = [
   { id: 'simulador', label: 'Anti-Regateo', icono: 'chat-processing-outline' },
   { id: 'checklist_foto', label: 'Foto con Celular', icono: 'camera-outline' },
@@ -405,9 +399,8 @@ const TABS_MARKETING = [
   { id: 'ruta_ventas', label: 'Canales de Venta', icono: 'storefront-outline' },
 ];
 
-/**
- * 1. Simulador Anti-Regateo (Respuestas Dignas y Amorosas)
- */
+//simulador de objeciones y regateo
+ 
 const OBJECIONES_REGATEO = [
   {
     id: 0,
@@ -447,9 +440,7 @@ const OBJECIONES_REGATEO = [
   },
 ];
 
-/**
- * 2. Checklist Interactivo de la Foto con Celular
- */
+//iteracion de checklist de fotos para celular
 const CHECKLIST_FOTO_ITEMS = [
   {
     id: 'c1',
@@ -489,13 +480,11 @@ const CHECKLIST_FOTO_ITEMS = [
   },
 ];
 
-/**
- * 3. Muestra Visual de Etiquetas con Historia
- */
+//etiquetaaas
 const EJEMPLOS_ETIQUETAS = [
   {
     id: 'bordado',
-    nombreTab: '🌸 Blusa',
+    nombreTab: ' Blusa',
     producto: 'Blusa en Telar de Cintura',
     artesana: 'Rosario Hernández',
     comunidad: 'San Antonino Castillo Velasco, Oaxaca',
@@ -514,7 +503,7 @@ const EJEMPLOS_ETIQUETAS = [
   },
   {
     id: 'miel',
-    nombreTab: '🍯 Miel',
+    nombreTab: ' Miel',
     producto: 'Miel Pura de Flor de Café',
     artesana: 'Cooperativa Flor de Montaña',
     comunidad: 'Sierra Sur, Oaxaca',
@@ -533,7 +522,7 @@ const EJEMPLOS_ETIQUETAS = [
   },
   {
     id: 'pan',
-    nombreTab: '🍞 Pan',
+    nombreTab: 'Pan',
     producto: 'Pan Tradicional en Horno de Leña',
     artesana: 'Doña Teresa y Familia',
     comunidad: 'Valles Centrales, Oaxaca',
@@ -552,7 +541,7 @@ const EJEMPLOS_ETIQUETAS = [
   },
   {
     id: 'herbolaria',
-    nombreTab: '🌿 Herbolaria',
+    nombreTab: ' Herbolaria',
     producto: 'Bálsamo Calmante de Árnica y Ruda',
     artesana: 'Colectiva Raíces Vivas',
     comunidad: 'Costa de Oaxaca',
@@ -624,7 +613,7 @@ const PROMPTS_IA = [
     id: 'p1',
     icono: 'bullhorn-outline',
     categoria: 'Publicidad y Volantes',
-    titulo: '🎨 Texto para Flyer o Volante de Venta',
+    titulo: ' Texto para Flyer o Volante de Venta',
     objetivo: 'Generar el texto completo para un volante impreso o imagen de WhatsApp.',
     textoPrompt: 'Actúa como una experta en mercadotecnia comunitaria y economía solidaria. Escribe el texto para un volante o flyer de venta para nuestra cooperativa de [Escribe aquí tu producto: ej. miel, bordados, mermeladas, panadería] en [Escribe tu comunidad o municipio en Oaxaca].\n\nNecesito:\n1. Un título llamativo y cálido.\n2. 3 motivos breves de por qué comprar local apoya a mujeres organizadas.\n3. Espacio para fecha, horario y punto de entrega.\n4. Nuestros teléfonos y redes sociales: [Escribe tus datos de contacto].\n5. Una frase final emotiva que resalte la riqueza de Oaxaca.',
     consejo: 'Copia el texto, pégalo en ChatGPT o Gemini, cambia lo que está entre corchetes [...] por tus datos reales y envíalo.',
@@ -633,7 +622,7 @@ const PROMPTS_IA = [
     id: 'p2',
     icono: 'whatsapp',
     categoria: 'Redes y WhatsApp',
-    titulo: '📱 Publicación para Facebook y Estados de WhatsApp',
+    titulo: ' Publicación para Facebook y Estados de WhatsApp',
     objetivo: 'Crear mensajes atractivos con emojis para anunciar productos o pedidos.',
     textoPrompt: 'Escribe 3 propuestas de mensajes cortos, alegres y con emojis bonitos para publicar en Facebook y en estados de WhatsApp anunciando que nuestra cooperativa de mujeres tiene disponible [Nombre del producto o colección].\n\nEl mensaje debe transmitir que es un producto 100% artesanal, hecho con amor, libre de intermediarios, y que cada compra sostiene la economía familiar de las socias. Incluye una invitación clara a enviar mensaje para hacer pedidos.',
     consejo: 'Pídele a la IA que use un tono cálido, familiar y respetuoso.',
@@ -642,7 +631,7 @@ const PROMPTS_IA = [
     id: 'p3',
     icono: 'card-text-outline',
     categoria: 'Historia y Empaque',
-    titulo: '🏷️ Historia Emotiva para la Etiqueta del Producto',
+    titulo: ' Historia Emotiva para la Etiqueta del Producto',
     objetivo: 'Contar quién elaboró la pieza para que la clienta valore el proceso artesanal.',
     textoPrompt: 'Ayúdame a redactar un texto breve y muy emotivo (máximo 40 palabras) para imprimir en una tarjetita que irá colgada a nuestro producto [Escribe qué es: ej. blusa de telar, chocolate de metate, pomada de hierbas].\n\nDebe contar que fue elaborado a mano por mujeres de la Red de Mujeres Cooperativistas de Oaxaca, preservando la memoria ancestral y sembrando paz y autonomía.',
     consejo: 'Este texto lo puedes imprimir en papel kraft para colgarlo en cada pieza que vendas.',
@@ -651,7 +640,7 @@ const PROMPTS_IA = [
     id: 'p4',
     icono: 'shield-heart-outline',
     categoria: 'Atención a Clientas',
-    titulo: '💬 Respuesta Respetuosa y Firme contra el Regateo',
+    titulo: ' Respuesta Respetuosa y Firme contra el Regateo',
     objetivo: 'Defender el precio justo de forma educada y sin perder a la clienta.',
     textoPrompt: 'Escribe 2 opciones de respuestas muy amables, comprensivas pero firmes para responder por WhatsApp a una persona que me está pidiendo descuento o rebaja en una artesanía de [Nombre del producto] que cuesta $[Precio].\n\nExplícale de manera cariñosa y clara que el precio es fijo porque representa [número de días o semanas] de trabajo minucioso, insumos de primera calidad y el pago digno por hora que merecen las artesanas para sustentar a sus familias.',
     consejo: 'Tener estas respuestas preparadas te dará seguridad y evitará que regales tu trabajo.',
@@ -660,7 +649,7 @@ const PROMPTS_IA = [
     id: 'p5',
     icono: 'lightbulb-on-outline',
     categoria: 'Ideas de Temporada',
-    titulo: '💡 Ideas de Paquetes para Fechas Especiales',
+    titulo: ' Ideas de Paquetes para Fechas Especiales',
     objetivo: 'Armar promociones atractivas para Día de Madres, Navidad o Fiestas.',
     textoPrompt: 'Somos una cooperativa de mujeres que elabora [Lista de 2 o 3 productos que hacen, ej. jabones de hierbas y toallas bordadas].\n\nDame 4 ideas de paquetes de regalo o canastas económicas para [Elegir temporada: Día de las Madres, Navidad o Regalo de Graduación] que podamos armar combinando nuestros productos con una presentación bonita y accesible, pero que nos deje una ganancia justa.',
     consejo: 'Pídele a la IA que te sugiera nombres bonitos para cada paquete de regalo.',
@@ -669,13 +658,13 @@ const PROMPTS_IA = [
 
 export default function YoAprendoScreen({ onNavigate }) {
   const { width } = useWindowDimensions();
-  const [vistaActual, setVistaActual] = useState('lista'); // 'lista' | 'herramientas_ia'
-  const [subVistaHerramientas, setSubVistaHerramientas] = useState(null); // null | 'marketing' | 'ia'
+  const [vistaActual, setVistaActual] = useState('lista'); 
+  const [subVistaHerramientas, setSubVistaHerramientas] = useState(null); 
   const [moduloActivo, setModuloActivo] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
 
   // Estados interactivos para Marketing
-  const [tabMkt, setTabMkt] = useState('simulador'); // 'simulador' | 'checklist_foto' | 'etiquetas' | 'ruta_ventas'
+  const [tabMkt, setTabMkt] = useState('simulador'); 
   const [objecionActiva, setObjecionActiva] = useState(0);
   const [checklistFotos, setChecklistFotos] = useState({
     c1: false, c2: false, c3: false, c4: false, c5: false, c6: false,
@@ -684,7 +673,7 @@ export default function YoAprendoScreen({ onNavigate }) {
   const [acordeonVentas, setAcordeonVentas] = useState('whatsapp');
 
   const carouselRef = useRef(null);
-  const cardSlideWidth = width - 48; // ancho de cada tarjeta estilo Instagram
+  const cardSlideWidth = width - 48; // ancho de cada tarjeta 
 
   // Navegación principal de módulos
   const handleAbrirModulo = (modulo) => {
@@ -739,7 +728,7 @@ export default function YoAprendoScreen({ onNavigate }) {
   // Descarga de Excel de costeo
   const handleDescargarExcel = () => {
     Alert.alert(
-      '📥 Plantilla de Costeo en Excel',
+      ' Plantilla de Costeo en Excel',
       'Esta plantilla automatizada te ayudará a calcular los costos de materiales, el valor de tus horas de producción y tu precio justo.\n\n(Pronto estará disponible el archivo oficial de descarga proporcionado por GESMujer).',
       [{ text: 'Entendido', style: 'default' }]
     );
@@ -808,7 +797,7 @@ export default function YoAprendoScreen({ onNavigate }) {
         <View style={{ width: 36 }} />
       </View>
 
-      {/* ══════════════ VISTA 1: LISTA PRINCIPAL (7 MÓDULOS) ══════════════ */}
+    
       {vistaActual === 'lista' && (
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Banner Informativo */}
@@ -851,7 +840,7 @@ export default function YoAprendoScreen({ onNavigate }) {
         </ScrollView>
       )}
 
-      {/* ══════════════ VISTA 2: LOS 4 CUADRADITOS DE HERRAMIENTAS ══════════════ */}
+     
       {vistaActual === 'herramientas_ia' && !subVistaHerramientas && (
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Banner Informativo de Herramientas */}
@@ -885,7 +874,7 @@ export default function YoAprendoScreen({ onNavigate }) {
         </ScrollView>
       )}
 
-      {/* ══════════════ VISTA 3: MARKETING Y COMERCIALIZACIÓN ULTRA INTERACTIVO ══════════════ */}
+      
       {subVistaHerramientas === 'marketing' && (
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
@@ -1029,7 +1018,7 @@ export default function YoAprendoScreen({ onNavigate }) {
             </View>
           )}
 
-          {/* ── INTERACCIÓN 2: CHECKLIST DE LA FOTO CON CELULAR ── */}
+        
           {tabMkt === 'checklist_foto' && (
             <View>
               <View style={styles.interactiveHeaderCard}>
@@ -1037,7 +1026,7 @@ export default function YoAprendoScreen({ onNavigate }) {
                   <MaterialCommunityIcons name="camera-metering-center" size={26} color={PURPLE} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.interactiveCardTitle}>El Reto de la Foto Perfecta</Text>
+                  <Text style={styles.interactiveCardTitle}>Consejo para la Foto Perfecta</Text>
                   <Text style={styles.interactiveCardDesc}>
                     Toca cada punto que cumpla tu foto. ¡Consigue 6 de 6 para fotos de nivel profesional!
                   </Text>
@@ -1127,7 +1116,7 @@ export default function YoAprendoScreen({ onNavigate }) {
             </View>
           )}
 
-          {/* ── INTERACCIÓN 3: MUESTRA VISUAL DE ETIQUETAS CON HISTORIA ── */}
+         
           {tabMkt === 'etiquetas' && (
             <View>
               <View style={styles.interactiveHeaderCard}>
@@ -1218,7 +1207,6 @@ export default function YoAprendoScreen({ onNavigate }) {
                 />
 
                 <View style={styles.kraftRow}>
-                  <Ionicons name="person-circle-outline" size={16} color={etiquetaSeleccionada.colorDetalleIcono} />
                   <Text style={[styles.kraftDataText, { color: etiquetaSeleccionada.colorTexto }]}>
                     <Text style={{ fontWeight: '700' }}>Creadora: </Text>
                     {etiquetaSeleccionada.artesana}
@@ -1226,7 +1214,6 @@ export default function YoAprendoScreen({ onNavigate }) {
                 </View>
 
                 <View style={styles.kraftRow}>
-                  <Ionicons name="location-outline" size={16} color={etiquetaSeleccionada.colorDetalleIcono} />
                   <Text style={[styles.kraftDataText, { color: etiquetaSeleccionada.colorTexto }]}>
                     <Text style={{ fontWeight: '700' }}>Origen: </Text>
                     {etiquetaSeleccionada.comunidad}
@@ -1234,7 +1221,6 @@ export default function YoAprendoScreen({ onNavigate }) {
                 </View>
 
                 <View style={styles.kraftRow}>
-                  <Ionicons name="time-outline" size={16} color={etiquetaSeleccionada.colorDetalleIcono} />
                   <Text style={[styles.kraftDataText, { color: etiquetaSeleccionada.colorTexto }]}>
                     <Text style={{ fontWeight: '700' }}>Dedicación: </Text>
                     {etiquetaSeleccionada.tiempoElaboracion}
@@ -1242,7 +1228,6 @@ export default function YoAprendoScreen({ onNavigate }) {
                 </View>
 
                 <View style={styles.kraftRow}>
-                  <Ionicons name="color-palette-outline" size={16} color={etiquetaSeleccionada.colorDetalleIcono} />
                   <Text style={[styles.kraftDataText, { color: etiquetaSeleccionada.colorTexto }]}>
                     <Text style={{ fontWeight: '700' }}>Técnica: </Text>
                     {etiquetaSeleccionada.tecnica}
@@ -1298,7 +1283,6 @@ export default function YoAprendoScreen({ onNavigate }) {
             </View>
           )}
 
-          {/* ── INTERACCIÓN 4: RUTAS DE VENTA Y CANALES SOLIDARIOS ── */}
           {tabMkt === 'ruta_ventas' && (
             <View>
               <View style={styles.interactiveHeaderCard}>
@@ -1373,7 +1357,7 @@ export default function YoAprendoScreen({ onNavigate }) {
         </ScrollView>
       )}
 
-      {/* ══════════════ VISTA 4: GUÍA Y BANCO DE PROMPTS DE IA ══════════════ */}
+      
       {subVistaHerramientas === 'ia' && (
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Hero IA */}
@@ -1385,7 +1369,7 @@ export default function YoAprendoScreen({ onNavigate }) {
             </Text>
           </View>
 
-          {/* Tarjeta explicativa: ¿Qué es la IA y cómo hablarle? */}
+          
           <View style={styles.iaGuideCard}>
             <View style={styles.iaGuideHeader}>
               <MaterialCommunityIcons name="lightbulb-on" size={24} color={PURPLE} />
@@ -1455,13 +1439,12 @@ export default function YoAprendoScreen({ onNavigate }) {
               </TouchableOpacity>
 
               {/* Consejo de uso */}
-              <Text style={styles.promptConsejoText}>💡 {prompt.consejo}</Text>
+              <Text style={styles.promptConsejoText}> {prompt.consejo}</Text>
             </View>
           ))}
         </ScrollView>
       )}
 
-      {/* ── Modal Estilo Carrusel de Instagram (Módulos 1 al 6, Plan de Negocios y Costeo) ── */}
       <Modal
         visible={!!moduloActivo}
         transparent={true}
@@ -1572,7 +1555,7 @@ export default function YoAprendoScreen({ onNavigate }) {
                   ))}
                 </ScrollView>
 
-                {/* Puntitos de navegación tipo Instagram */}
+               
                 <View style={styles.dotsRow}>
                   {moduloActivo.slides.map((_, i) => (
                     <View
@@ -1714,7 +1697,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  // ── Cuadrícula de 4 Cuadraditos (Herramientas, consejos, IA) ──
+ 
   cuadraditosGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -1793,7 +1776,8 @@ const styles = StyleSheet.create({
     borderColor: PURPLE,
   },
   mktTabBtnText: {
-    fontSize: 12.5,
+    // Tamaño de letra: Botones de las pestañas superiores (Anti-Regateo, Foto con Celular, etc.)
+    fontSize: 14,
     fontWeight: '700',
     color: PURPLE,
   },
@@ -1822,13 +1806,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   interactiveCardTitle: {
+    // Tamaño de letra: Título de la tarjeta informativa morada
     fontSize: 15,
     fontWeight: '800',
     color: PURPLE,
     marginBottom: 2,
   },
   interactiveCardDesc: {
-    fontSize: 12,
+    // Tamaño de letra: Descripción de la tarjeta informativa morada
+    fontSize: 14.5,
     color: '#666',
     lineHeight: 16,
   },
@@ -1863,7 +1849,8 @@ const styles = StyleSheet.create({
   },
   objecionBtnText: {
     flex: 1,
-    fontSize: 12.5,
+    // Tamaño de letra: Frases y preguntas del cliente en Anti-Regateo
+    fontSize: 14,
     color: '#444',
     lineHeight: 17,
   },
@@ -1897,12 +1884,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   respuestaTagText: {
-    fontSize: 11.5,
+    fontSize: 12,
     fontWeight: '700',
     color: PURPLE,
   },
   respuestaGuiaLabel: {
-    fontSize: 11,
+    fontSize: 12,
     color: '#888',
     fontWeight: '600',
     textTransform: 'uppercase',
@@ -1916,7 +1903,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   speechBubbleText: {
-    fontSize: 13.5,
+    // Tamaño de letra: Respuesta sugerida dentro de la burbuja morada
+    fontSize: 14.5,
     color: '#2d1338',
     lineHeight: 20,
     fontStyle: 'italic',
@@ -1934,6 +1922,7 @@ const styles = StyleSheet.create({
   },
   copiarRespuestaBtnText: {
     color: '#ffffff',
+    // Tamaño de letra: Botón "Copiar respuesta"
     fontSize: 13,
     fontWeight: '700',
   },
@@ -1945,13 +1934,15 @@ const styles = StyleSheet.create({
     borderColor: '#fae8b4',
   },
   explicacionTitle: {
-    fontSize: 12,
+    // Tamaño de letra: Título "¿Por qué funciona?" o tip
+    fontSize: 13,
     fontWeight: '700',
     color: '#92400e',
     marginBottom: 2,
   },
   explicacionText: {
-    fontSize: 12,
+    // Tamaño de letra: Texto de explicación del tip
+    fontSize: 14,
     color: '#78350f',
     lineHeight: 17,
   },
@@ -1973,6 +1964,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   scoreNumberText: {
+    // Tamaño de letra: Número del contador 
     fontSize: 16,
     fontWeight: '800',
     color: PURPLE,
@@ -1984,7 +1976,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   scoreStatusText: {
-    fontSize: 11.5,
+    // Tamaño de letra: Etiqueta de estado 
+    fontSize: 12.5,
     fontWeight: '700',
     color: PURPLE,
   },
@@ -2000,7 +1993,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   felicitacionText: {
-    fontSize: 12,
+    // Tamaño de letra: Mensaje verde de éxito al completar el checklist
+    fontSize: 14,
     color: '#166534',
     fontWeight: '700',
     marginTop: 8,
@@ -2034,7 +2028,8 @@ const styles = StyleSheet.create({
     backgroundColor: PURPLE,
   },
   checkItemTitle: {
-    fontSize: 13.5,
+    // Tamaño de letra: Título de cada requisito para la foto
+    fontSize: 14.5,
     fontWeight: '700',
     color: '#333',
     marginBottom: 2,
@@ -2043,7 +2038,8 @@ const styles = StyleSheet.create({
     color: PURPLE,
   },
   checkItemDesc: {
-    fontSize: 11.5,
+    // Tamaño de letra: Explicación de cada requisito para la foto
+    fontSize: 14,
     color: '#666',
     lineHeight: 16,
   },
@@ -2057,7 +2053,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   reiniciarBtnText: {
-    fontSize: 12.5,
+    // Tamaño de letra: Botón "Reiniciar checklist"
+    fontSize: 13.5,
     color: '#666',
     fontWeight: '600',
   },
@@ -2086,7 +2083,8 @@ const styles = StyleSheet.create({
     borderColor: '#6d4c41',
   },
   etiquetaPillText: {
-    fontSize: 12,
+    // Tamaño de letra: Botones de selección de producto (Blusa, Miel, Pan, etc.)
+    fontSize: 13.5,
     fontWeight: '700',
     color: '#666',
   },
@@ -2124,14 +2122,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   kraftCoopTitle: {
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '800',
     color: '#8d6e63',
     textAlign: 'center',
     letterSpacing: 0.8,
   },
   kraftProductTitle: {
-    fontSize: 16,
+    // Tamaño de letra: Nombre del producto en la etiqueta de cartón/kraft
+    fontSize: 16.5,
     fontWeight: '800',
     color: '#4e342e',
     textAlign: 'center',
@@ -2150,7 +2149,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   kraftDataText: {
-    fontSize: 12,
+    // Tamaño de letra: Textos de Creadora, Origen, Dedicación y Técnica
+    fontSize: 13.5,
     color: '#5d4037',
     flex: 1,
   },
@@ -2163,7 +2163,8 @@ const styles = StyleSheet.create({
     borderLeftColor: '#8d6e63',
   },
   kraftQuoteText: {
-    fontSize: 11.5,
+    // Tamaño de letra: Frase o historia del producto en la etiqueta
+    fontSize: 13.5,
     color: '#4e342e',
     fontStyle: 'italic',
     lineHeight: 16,
@@ -2179,12 +2180,13 @@ const styles = StyleSheet.create({
   },
   kraftPriceLabel: {
     color: '#f5edd9',
-    fontSize: 11.5,
+    fontSize: 13.5,
     fontWeight: '600',
   },
   kraftPriceValue: {
     color: '#ffffff',
-    fontSize: 14.5,
+    // Tamaño de letra: Precio sugerido en la etiqueta
+    fontSize: 15.5,
     fontWeight: '800',
   },
 
@@ -2198,7 +2200,8 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
   comparativaMainTitle: {
-    fontSize: 13.5,
+    // Tamaño de letra: Título "Etiqueta Común vs Etiqueta con Alma"
+    fontSize: 16.5,
     fontWeight: '800',
     color: '#333',
     marginBottom: 10,
@@ -2215,12 +2218,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   comparativaBoxTitle: {
-    fontSize: 12,
+    fontSize: 15.5,
     fontWeight: '800',
     marginBottom: 4,
   },
   comparativaBoxText: {
-    fontSize: 11,
+    // Tamaño de letra: Texto de los ejemplos en la comparativa
+    fontSize: 13.5,
     color: '#444',
     lineHeight: 15,
   },
@@ -2250,12 +2254,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rutaTitle: {
-    fontSize: 13.5,
+    // Tamaño de letra: Título de los Canales de Venta (WhatsApp, Ferias, etc.)
+    fontSize: 15,
     fontWeight: '700',
     color: '#222',
   },
   rutaSub: {
-    fontSize: 11,
+    // Tamaño de letra: Subtítulo de cada canal de venta
+    fontSize: 15.5,
     color: '#666',
     marginTop: 1,
   },
@@ -2266,7 +2272,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   dificultadBadgeText: {
-    fontSize: 10,
+    fontSize: 11.5,
     fontWeight: '700',
     color: PURPLE,
   },
@@ -2278,7 +2284,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf8fc',
   },
   pasosHeaderTitle: {
-    fontSize: 12,
+    fontSize: 14.5,
     fontWeight: '800',
     color: PURPLE,
     marginTop: 10,
@@ -2306,7 +2312,8 @@ const styles = StyleSheet.create({
   },
   pasoItemText: {
     flex: 1,
-    fontSize: 12,
+    // Tamaño de letra: Texto de los pasos 1, 2 y 3 en la ruta de venta
+    fontSize: 15,
     color: '#444',
     lineHeight: 17,
   },
@@ -2319,12 +2326,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   secretoRedTitle: {
-    fontSize: 11.5,
+    fontSize: 14,
     fontWeight: '700',
     color: '#b45309',
   },
   secretoRedText: {
-    fontSize: 11.5,
+    // Tamaño de letra: Texto del "Secreto de la Red"
+    fontSize: 13.5,
     color: '#78350f',
     lineHeight: 16,
   },
