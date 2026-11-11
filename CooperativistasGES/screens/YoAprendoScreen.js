@@ -2328,7 +2328,7 @@ const styles = StyleSheet.create({
   secretoRedTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#b45309',
+    color: '#b45309', 
   },
   secretoRedText: {
     // Tamaño de letra: Texto del "Secreto de la Red"
@@ -2361,7 +2361,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   iaGuideTitle: {
-    fontSize: 15,
+    fontSize: 15.5,
     fontWeight: '800',
     color: PURPLE,
   },
@@ -2384,12 +2384,12 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   reglaTitulo: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: '700',
     color: '#222',
   },
   reglaDesc: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#666',
     lineHeight: 16,
     marginTop: 2,
@@ -2422,7 +2422,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   promptCatLabel: {
-    fontSize: 11,
+    fontSize: 12.5,
     fontWeight: '700',
     color: PURPLE,
     textTransform: 'uppercase',
@@ -2433,7 +2433,7 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   promptObjetivo: {
-    fontSize: 12,
+    fontSize: 13.5,
     color: '#666',
     marginBottom: 10,
     fontStyle: 'italic',
@@ -2447,7 +2447,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   promptContentText: {
-    fontSize: 12.5,
+    fontSize: 13.5,
     color: '#333',
     lineHeight: 18,
   },
