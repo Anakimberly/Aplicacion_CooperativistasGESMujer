@@ -10,6 +10,7 @@ import PerfilScreen          from './screens/PerfilScreen';
 import InformacionScreen     from './screens/InformacionScreen';
 import GuiaEconomiaScreen    from './screens/GuiaEconomiaScreen';
 import YoAprendoScreen        from './screens/YoAprendoScreen';
+import PlaylistScreen         from './screens/PlaylistScreen';
 import BottomNav             from './components/BottomNav';
 
 import { db } from './firebaseConfig';
@@ -97,6 +98,8 @@ export default function App() {
         );
       case 'YoAprendo':
         return <YoAprendoScreen onNavigate={handleNavigate} />;
+      case 'Playlist':
+        return <PlaylistScreen onNavigate={handleNavigate} />;
       case 'Home':
       default:
         return <HomeScreen onNavigate={handleNavigate} />;
