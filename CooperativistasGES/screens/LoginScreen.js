@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { auth, db } from '../firebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, doc, setDoc, getDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
+import PoliticaPrivacidadModal from '../components/PoliticaPrivacidadModal';
 
 const PURPLE = '#5b1378';
 
@@ -27,6 +28,8 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
   const [contrasenaRegistro, setContrasenaRegistro] = useState('');
   const [verPasswordReg, setVerPasswordReg] = useState(false);
 
+  const [mostrarPoliticaModal, setMostrarPoliticaModal] = useState(false);
+
   const [cargando, setCargando] = useState(false);
 
   // Función para alternar modo limpiando espacios accidentales
@@ -34,7 +37,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     setModo(nuevoModo);
   };
 
-  // 🔑 Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)
+  // Iniciar Sesión (por Nombre de Usuario o Correo Electrónico)
   const handleLogin = async () => {
     const inputUserClean = usuario.trim();
     const inputUserLower = inputUserClean.toLowerCase();
@@ -127,8 +130,8 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
     }
   };
 
-  // 📝 Registrar Nueva Cuenta
-  const handleRegister = async () => {
+  // Validar campos y abrir política de información antes de registrar
+  const handleVerificarCamposRegistro = () => {
     const usernameToUse = nombreUsuario.trim();
     const emailToUse = correoRegistro.trim().toLowerCase();
     const passToUse = contrasenaRegistro.trim();
@@ -138,13 +141,11 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
       return;
     }
 
-    // Validación de longitud mínima de contraseña (8 caracteres)
     if (passToUse.length < 8) {
       Alert.alert('Contraseña corta', 'La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
-    // Validación de al menos un número o carácter especial
     const tieneNumeroOCaracter = /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(passToUse);
     if (!tieneNumeroOCaracter) {
       Alert.alert(
@@ -154,6 +155,15 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
       return;
     }
 
+    setMostrarPoliticaModal(true);
+  };
+
+  // Crear la cuenta tras aceptar la política
+  const handleConfirmarRegistro = async () => {
+    const usernameToUse = nombreUsuario.trim();
+    const emailToUse = correoRegistro.trim().toLowerCase();
+    const passToUse = contrasenaRegistro.trim();
+
     setCargando(true);
 
     const perfilGuardar = {
@@ -161,6 +171,8 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
       nombreUsuarioLower: usernameToUse.toLowerCase(),
       nombre: usernameToUse,
       correo: emailToUse,
+      aceptoPoliticaDatos: true,
+      fechaAceptacionPolitica: serverTimestamp(),
     };
 
     try {
@@ -175,9 +187,11 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
         onSaveProfile(perfilGuardar);
       }
 
+      setMostrarPoliticaModal(false);
       Alert.alert('¡Registro Exitoso!', `¡Bienvenida ${usernameToUse}! Tu cuenta ha sido creada.`);
       onNavigate('Home', emailToUse);
     } catch (error) {
+      setMostrarPoliticaModal(false);
       if (error.code === 'auth/email-already-in-use') {
         Alert.alert('Correo ya registrado', 'Este correo ya tiene cuenta. Toca en "Iniciar Sesión".');
       } else {
@@ -316,7 +330,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                     value={contrasenaRegistro}
                     onChangeText={setContrasenaRegistro}
                     secureTextEntry={!verPasswordReg}
-                    placeholder='Contraseña (mín. 8 caracteres y número/símbolo)'
+                    placeholder='Contraseña (mín. 8 caracteres)'
                     placeholderTextColor='rgba(91, 19, 120, 0.45)'
                   />
                   <TouchableOpacity
@@ -344,7 +358,7 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
                 {/* Botón Principal (Crear Mi Cuenta) */}
                 <TouchableOpacity
                   style={styles.primaryPillButton}
-                  onPress={handleRegister}
+                  onPress={handleVerificarCamposRegistro}
                   disabled={cargando}
                   activeOpacity={0.8}
                 >
@@ -357,6 +371,15 @@ export default function LoginScreen({ onNavigate, onSaveProfile }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <PoliticaPrivacidadModal
+        visible={mostrarPoliticaModal}
+        onClose={() => setMostrarPoliticaModal(false)}
+        onAccept={handleConfirmarRegistro}
+        loading={cargando}
+        acceptButtonText="Acepto y Crear mi Cuenta"
+        cancelButtonText="No acepto / Regresar"
+      />
     </SafeAreaView>
   );
 }
@@ -371,7 +394,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  // ── Domo Curvado Superior Púrpura ──
+  
   headerContainer: {
     width: '100%',
     alignItems: 'center',
@@ -406,7 +429,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ── Formulario en Fondo Blanco Centrado ──
+  
   bodyContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
@@ -416,7 +439,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // ── Inputs Ovalados (Pill) con Borde Morado ──
+  
   pillInputContainer: {
     borderWidth: 1.5,
     borderColor: PURPLE,
@@ -435,7 +458,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
 
-  // ── Input Contraseña con Ojo ──
+  
   passwordPillContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -461,7 +484,6 @@ const styles = StyleSheet.create({
     padding: 4,
   },
 
-  // ── Enlace Toggle Modo ──
   toggleBtn: {
     alignItems: 'center',
     marginTop: 6,
@@ -474,7 +496,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // ── Botón Principal Ovalado Centrado ──
+  
   primaryPillButton: {
     backgroundColor: PURPLE,
     borderRadius: 25,
