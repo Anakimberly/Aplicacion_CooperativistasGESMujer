@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import {
   View, Text, StyleSheet, StatusBar,
   ScrollView, TouchableOpacity, Modal, useWindowDimensions,
-  Alert, Share, Linking,
+  Alert, Share, Linking, Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -1079,9 +1079,45 @@ export default function YoAprendoScreen({ onNavigate }) {
                 </View>
 
                 {totalChecklist === 6 && (
-                  <Text style={styles.felicitacionText}>
-                     ¡Tu foto tiene iluminación, nitidez y respeto a los detalles! Lista para publicar en WhatsApp y redes.
-                  </Text>
+                  <View style={styles.fotoResultadoBox}>
+                    <Text style={styles.felicitacionText}>
+                      ¡Tu foto tiene iluminación, nitidez y respeto a los detalles! Lista para publicar en WhatsApp y redes.
+                    </Text>
+
+                    <View style={styles.fotoResultadoCard}>
+                      <View style={styles.fotoBadgeHeader}>
+                        <Ionicons name="sparkles" size={18} color="#166534" />
+                        <Text style={styles.fotoBadgeHeaderText}>Ejemplo Real de Foto Lograda</Text>
+                      </View>
+
+                      <View style={styles.fotoImageWrapper}>
+                        <Image
+                          source={require('../assets/foto_producto_ejemplo.jpg')}
+                          style={styles.fotoProductoImg}
+                          resizeMode="cover"
+                        />
+                      </View>
+
+                      <Text style={styles.fotoResultadoDesc}>
+                        Fondo de manta limpia, luz natural suave sin flash, colores vivos del bordado artesanal y detalles nítidos en primer plano.
+                      </Text>
+
+                      <View style={styles.fotoTipsTagsRow}>
+                        <View style={styles.fotoTagPill}>
+                          <Ionicons name="checkmark-circle" size={14} color="#166534" />
+                          <Text style={styles.fotoTagPillText}>Luz natural</Text>
+                        </View>
+                        <View style={styles.fotoTagPill}>
+                          <Ionicons name="checkmark-circle" size={14} color="#166534" />
+                          <Text style={styles.fotoTagPillText}>Fondo limpio</Text>
+                        </View>
+                        <View style={styles.fotoTagPill}>
+                          <Ionicons name="checkmark-circle" size={14} color="#166534" />
+                          <Text style={styles.fotoTagPillText}>Bordado nítido</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
                 )}
               </View>
 
@@ -2019,6 +2055,64 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 8,
     lineHeight: 16,
+  },
+  fotoResultadoBox: {
+    marginTop: 8,
+  },
+  fotoResultadoCard: {
+    backgroundColor: '#f6fbf7',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1.5,
+    borderColor: '#bbf7d0',
+    marginTop: 10,
+  },
+  fotoBadgeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  fotoBadgeHeaderText: {
+    fontSize: 13.5,
+    fontWeight: '800',
+    color: '#166534',
+  },
+  fotoImageWrapper: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#e5e7eb',
+    height: 220,
+    marginBottom: 10,
+  },
+  fotoProductoImg: {
+    width: '100%',
+    height: '100%',
+  },
+  fotoResultadoDesc: {
+    fontSize: 12,
+    color: '#14532d',
+    lineHeight: 17,
+    marginBottom: 8,
+  },
+  fotoTipsTagsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  fotoTagPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#dcfce7',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  fotoTagPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#166534',
   },
   checkItemCard: {
     flexDirection: 'row',
